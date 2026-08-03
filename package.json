@@ -9,12 +9,23 @@
   "scripts": {
     "build": "tree-sitter build",
     "build:wasm": "mkdir -p build && tree-sitter build --wasm --output build/tree-sitter-dslx.wasm",
+    "benchmark": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/benchmark.mjs",
+    "fuzz": "npm run build:wasm && node scripts/fuzz.mjs",
+    "fuzz:corpus": "tree-sitter fuzz --iterations 20 --edits 3",
     "generate": "tree-sitter generate",
     "test": "tree-sitter test",
+    "test:incremental": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-incremental.mjs",
+    "test:c-consumer": "./scripts/test-c-consumer.sh",
+    "test:metamorphic": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-metamorphic.mjs",
+    "test:sanitizers": "./scripts/test-sanitizers.sh",
     "test:upstream": "./scripts/validate-xls-corpus.sh",
+    "test:wasm": "npm run build:wasm && node scripts/wasm-smoke.mjs",
     "verify": "./scripts/verify.sh"
   },
   "engines": {
     "node": ">=24 <25"
+  },
+  "devDependencies": {
+    "web-tree-sitter": "0.26.11"
   }
 }

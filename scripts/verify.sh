@@ -13,7 +13,13 @@ cd "${dslx_verify_repo_dir}"
 npm run generate
 npm test
 npm run build
-npm run build:wasm
+npm run test:wasm
+npm run test:upstream
+npm run test:metamorphic
+npm run test:incremental
+npm run fuzz
+npm run fuzz:corpus
+npm run test:c-consumer
 
 shellcheck dev.sh scripts/*.sh
 

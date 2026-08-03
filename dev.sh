@@ -39,6 +39,7 @@ dslx_docker_args=(
   --rm
   --mount "type=bind,source=${dslx_repo_dir},target=/workspace/tree-sitter-dslx"
   --mount "type=bind,source=${dslx_repo_dir}/.cache,target=/home/developer/.cache"
+  --env NPM_CONFIG_CACHE=/home/developer/.cache/npm
   --workdir /workspace/tree-sitter-dslx
 )
 
