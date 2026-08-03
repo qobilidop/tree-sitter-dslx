@@ -1,0 +1,33 @@
+{
+  "grammars": [
+    {
+      "name": "dslx",
+      "camelcase": "DSLX",
+      "scope": "source.dslx",
+      "path": ".",
+      "file-types": [
+        "x",
+        "dslx"
+      ],
+      "highlights": [
+        "queries/highlights.scm"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "Apache-2.0",
+    "description": "DSLX grammar for Tree-sitter",
+    "authors": [
+      {
+        "name": "Bili Dong"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/qobilidop/tree-sitter-dslx"
+    }
+  },
+  "bindings": {
+    "c": true
+  }
+}

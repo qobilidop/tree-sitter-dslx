@@ -1,0 +1,26 @@
+==================
+Empty module
+==================
+
+---
+
+(source_file)
+
+==================
+Function
+==================
+
+pub fn identity(x: u32) -> u32 { x }
+
+---
+
+(source_file
+  (function_definition
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      (identifier))))

@@ -1,0 +1,14 @@
+{
+  "name": "tree-sitter-dslx",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "DEV_GID": "1000",
+      "DEV_UID": "1000"
+    }
+  },
+  "remoteUser": "developer",
+  "updateRemoteUserUID": true,
+  "workspaceFolder": "/workspace/tree-sitter-dslx"
+}

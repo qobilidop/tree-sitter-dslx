@@ -1,0 +1,7 @@
+.cache/
+build/
+dist/
+node_modules/
+*.dylib
+*.so
+*.wasm

@@ -1,0 +1,19 @@
+{
+  "name": "tree-sitter-dslx",
+  "version": "0.1.0",
+  "description": "DSLX grammar for Tree-sitter",
+  "private": true,
+  "license": "Apache-2.0",
+  "author": "Bili Dong",
+  "repository": "github:qobilidop/tree-sitter-dslx",
+  "scripts": {
+    "build": "tree-sitter build",
+    "build:wasm": "mkdir -p build && tree-sitter build --wasm --output build/tree-sitter-dslx.wasm",
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "verify": "./scripts/verify.sh"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}
