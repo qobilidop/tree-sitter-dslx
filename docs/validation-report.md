@@ -36,7 +36,7 @@ suite natively on a GitHub-hosted Ubuntu x64 runner.
 | Wasm runtime                            | ABI 15 loads; 34 highlight captures; malformed-source query smoke passes                                                              |
 | Native runtime                          | All 607 files and a prepend/edit fresh-tree comparison pass under ASan and UBSan                                                      |
 | External C consumer                     | Isolated CMake consumers discover installed runtime and grammar through pkg-config, link shared and static builds, and parse a module |
-| Playground                              | 10 production assets and four examples pass; the HTTPS Pages deployment serves the tested Wasm parser and static assets               |
+| Playground                              | 10 assets, four examples, and four reversible line-local recovery actions pass; HTTPS Pages serves the tested Wasm and static assets  |
 | Recorded fuzz campaign                  | 4/4 workers pass; 8.3325 CPU-hours, 263,953,696 edits, 32,994,212 traces, and 4,065,700 error-free fresh comparisons                  |
 
 ### Corpus classification

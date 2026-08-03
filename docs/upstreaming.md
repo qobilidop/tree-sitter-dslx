@@ -40,8 +40,8 @@ experiments, documentation tools, and future integrations.
 
 1. Open the parametric example and select nodes in the tree.
 2. Make a token-boundary edit and show the changed-range and parse-time metrics.
-3. Click **Introduce an error** and show localized recovery plus continuing
-   highlighting.
+3. Use an example-specific **Break…** action and show localized recovery plus
+   continuing highlighting, then repair the same construct.
 4. Switch to the proc/channel example to demonstrate DSLX-specific coverage.
 5. Open the validation report and reproduce one normal check through `dev.sh`.
 

@@ -2,7 +2,6 @@
 
 import { Language, Parser, Query } from "./web-tree-sitter.js";
 
-const BROKEN_SUFFIX = "\nfn broken(x: u32 {\n  x\n}\n";
 const MAX_TREE_ROWS = 3000;
 
 const elements = {
@@ -28,6 +27,7 @@ let examples;
 let tree = null;
 let source = "";
 let scheduled = false;
+let selectedExampleIndex = 0;
 let selectedTreeRow = null;
 let treeRowsByKey = new Map();
 
@@ -214,6 +214,36 @@ function updateCursorPosition() {
   syncSelectionToTree();
 }
 
+function currentMutation() {
+  return examples?.[selectedExampleIndex]?.mutation ?? null;
+}
+
+function mutationState(text, mutation = currentMutation()) {
+  if (mutation === null) return { kind: "unavailable", index: -1 };
+  const brokenIndex = text.indexOf(mutation.after);
+  if (brokenIndex !== -1) return { kind: "broken", index: brokenIndex };
+  const intactIndex = text.indexOf(mutation.before);
+  if (intactIndex !== -1) return { kind: "intact", index: intactIndex };
+  return { kind: "unavailable", index: -1 };
+}
+
+function updateMutationButton(text) {
+  const mutation = currentMutation();
+  const state = mutationState(text, mutation);
+  elements.errorToggle.disabled = state.kind === "unavailable";
+  if (state.kind === "broken") {
+    elements.errorToggle.textContent = mutation.repairLabel;
+    elements.errorToggle.title = "Restore the example's original syntax";
+  } else if (state.kind === "intact") {
+    elements.errorToggle.textContent = mutation.introduceLabel;
+    elements.errorToggle.title = "Apply a focused, reversible syntax error";
+  } else {
+    elements.errorToggle.textContent = "Edit target changed";
+    elements.errorToggle.title =
+      "Reload the example to restore its recovery demonstration";
+  }
+}
+
 function parseEditor() {
   scheduled = false;
   const nextSource = elements.editor.value;
@@ -250,9 +280,7 @@ function parseEditor() {
   elements.parserStatus.innerHTML = recoveries.length
     ? '<span class="scope-dot"></span> Recovering'
     : '<span class="scope-dot"></span> Ready';
-  elements.errorToggle.textContent = source.endsWith(BROKEN_SUFFIX)
-    ? "Repair the error"
-    : "Introduce an error";
+  updateMutationButton(source);
 }
 
 function scheduleParse() {
@@ -262,6 +290,7 @@ function scheduleParse() {
 }
 
 function loadExample(index) {
+  selectedExampleIndex = index;
   const example = examples[index];
   elements.exampleDescription.textContent = example.description;
   elements.editor.value = example.source;
@@ -303,7 +332,6 @@ async function initialize() {
 
     elements.exampleSelect.disabled = false;
     elements.editor.disabled = false;
-    elements.errorToggle.disabled = false;
     elements.copyTree.disabled = false;
     loadExample(0);
   } catch (error) {
@@ -323,10 +351,21 @@ elements.exampleSelect.addEventListener("change", (event) => {
   loadExample(Number.parseInt(event.target.value, 10));
 });
 elements.errorToggle.addEventListener("click", () => {
-  const broken = elements.editor.value.endsWith(BROKEN_SUFFIX);
-  elements.editor.value = broken
-    ? elements.editor.value.slice(0, -BROKEN_SUFFIX.length)
-    : `${elements.editor.value}${BROKEN_SUFFIX}`;
+  const text = elements.editor.value;
+  const mutation = currentMutation();
+  const state = mutationState(text, mutation);
+  if (state.kind === "unavailable") return;
+  const needle = state.kind === "broken" ? mutation.after : mutation.before;
+  const replacement =
+    state.kind === "broken" ? mutation.before : mutation.after;
+  elements.editor.value = `${text.slice(0, state.index)}${replacement}${text.slice(
+    state.index + needle.length,
+  )}`;
+  elements.editor.focus();
+  elements.editor.setSelectionRange(
+    state.index,
+    state.index + replacement.length,
+  );
   scheduleParse();
 });
 elements.copyTree.addEventListener("click", async () => {
