@@ -3,7 +3,12 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { createDslxParser, parseRequired, repoRoot } from "./lib/dslx-wasm.mjs";
+import {
+  createDslxParser,
+  parseRequired,
+  replaceIncrementally,
+  repoRoot,
+} from "./lib/dslx-wasm.mjs";
 
 const revision = fs
   .readFileSync(path.join(repoRoot, "test/upstream/XLS_REVISION"), "utf8")
@@ -33,29 +38,37 @@ const files = ["xls/dslx", "xls/examples", "xls/modules"]
   .sort()
   .filter((file) => !exclusions.has(path.relative(corpusRoot, file)));
 const parser = await createDslxParser();
-let variants = 0;
+let edits = 0;
+let changedRanges = 0;
 
 for (const file of files) {
-  const source = fs.readFileSync(file, "utf8");
-  const transforms = [
-    `// metamorphic-prefix\n${source}`,
-    `${source}\n// metamorphic-suffix\n`,
-    source.replaceAll("\n", "\r\n"),
+  const original = fs.readFileSync(file, "utf8");
+  let source = original;
+  let tree = parseRequired(parser, source);
+  const prefix = "// full incremental\n";
+  const replacedPrefix = "// extended incremental\n";
+  const editTrace = [
+    { startIndex: 0, deleteCount: 0, insertText: prefix },
+    { startIndex: 3, deleteCount: 4, insertText: "extended" },
+    { startIndex: 0, deleteCount: replacedPrefix.length, insertText: "" },
   ];
-  for (const transformed of transforms) {
-    const tree = parseRequired(parser, transformed);
-    if (tree.rootNode.hasError) {
-      tree.delete();
-      throw new Error(
-        `Metamorphic parse failed: ${path.relative(corpusRoot, file)}`,
-      );
-    }
-    tree.delete();
-    variants += 1;
+
+  for (const edit of editTrace) {
+    const result = replaceIncrementally(parser, tree, source, edit);
+    source = result.source;
+    tree = result.tree;
+    edits += 1;
+    changedRanges += result.changedRanges.length;
   }
+  if (source !== original || tree.rootNode.hasError) {
+    throw new Error(
+      `Full edit trace did not restore ${path.relative(corpusRoot, file)}`,
+    );
+  }
+  tree.delete();
 }
 
 parser.delete();
 console.log(
-  `Metamorphic validation passed: files=${files.length} variants=${variants}`,
+  `Full incremental validation passed: revision=${revision} files=${files.length} edits=${edits} changed_ranges=${changedRanges}`,
 );

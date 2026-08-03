@@ -49,7 +49,10 @@ function pointAt(text, index) {
 function smallestEdit(before, after) {
   let startIndex = 0;
   const commonLength = Math.min(before.length, after.length);
-  while (startIndex < commonLength && before[startIndex] === after[startIndex]) {
+  while (
+    startIndex < commonLength &&
+    before[startIndex] === after[startIndex]
+  ) {
     startIndex += 1;
   }
 
@@ -92,13 +95,21 @@ function renderHighlights(text, root, recoveries) {
   const styles = new Array(text.length).fill("");
   for (const capture of highlightsQuery.captures(root)) {
     const className = `hl-${capture.name.replaceAll(".", "-")}`;
-    for (let index = capture.node.startIndex; index < capture.node.endIndex; index += 1) {
+    for (
+      let index = capture.node.startIndex;
+      index < capture.node.endIndex;
+      index += 1
+    ) {
       styles[index] = className;
     }
   }
   for (const node of recoveries) {
     const end = Math.max(node.endIndex, node.startIndex + 1);
-    for (let index = node.startIndex; index < Math.min(end, text.length); index += 1) {
+    for (
+      let index = node.startIndex;
+      index < Math.min(end, text.length);
+      index += 1
+    ) {
       styles[index] = "hl-error";
     }
   }
@@ -137,7 +148,9 @@ function renderTree(root) {
     const start = node.startPosition;
     const end = node.endPosition;
     row.innerHTML = `${
-      field === null ? "" : `<span class="tree-field">${escapeHtml(field)}: </span>`
+      field === null
+        ? ""
+        : `<span class="tree-field">${escapeHtml(field)}: </span>`
     }${escapeHtml(node.isMissing ? `MISSING ${node.type}` : node.type)} <span class="tree-range">${
       start.row + 1
     }:${start.column + 1}–${end.row + 1}:${end.column + 1}</span>`;
@@ -153,7 +166,10 @@ function renderTree(root) {
 
     for (let index = node.childCount - 1; index >= 0; index -= 1) {
       const child = node.child(index);
-      if (child === null || (!child.isNamed && !child.isError && !child.isMissing)) {
+      if (
+        child === null ||
+        (!child.isNamed && !child.isError && !child.isMissing)
+      ) {
         continue;
       }
       stack.push({
@@ -184,7 +200,10 @@ function selectTreeRow(row) {
 function syncSelectionToTree() {
   if (tree === null || source.length === 0) return;
   const start = Math.min(elements.editor.selectionStart, source.length - 1);
-  const end = Math.max(start, Math.min(elements.editor.selectionEnd, source.length));
+  const end = Math.max(
+    start,
+    Math.min(elements.editor.selectionEnd, source.length),
+  );
   const node = tree.rootNode.namedDescendantForIndex(start, end);
   if (node !== null) selectTreeRow(treeRowsByKey.get(nodeKey(node)) ?? null);
 }
@@ -221,7 +240,10 @@ function parseEditor() {
   elements.parseDuration.textContent = `${duration.toFixed(2)} ms`;
   elements.changedRanges.textContent = changedRanges.length.toLocaleString();
   elements.changedRanges.title = changedRanges
-    .map((range) => `${range.startPosition.row + 1}:${range.startPosition.column + 1}`)
+    .map(
+      (range) =>
+        `${range.startPosition.row + 1}:${range.startPosition.column + 1}`,
+    )
     .join(", ");
   elements.errorCount.textContent = recoveries.length.toLocaleString();
   elements.nodeCount.textContent = renderedNodes.toLocaleString();
@@ -265,7 +287,9 @@ async function initialize() {
       throw new Error("Could not load playground data");
     }
     examples = await examplesResponse.json();
-    const language = await Language.load(new URL("tree-sitter-dslx.wasm", base).href);
+    const language = await Language.load(
+      new URL("tree-sitter-dslx.wasm", base).href,
+    );
     parser = new Parser();
     parser.setLanguage(language);
     highlightsQuery = new Query(language, await queryResponse.text());
@@ -310,7 +334,9 @@ elements.copyTree.addEventListener("click", async () => {
   await navigator.clipboard.writeText(tree.rootNode.toString());
   const label = elements.copyTree.textContent;
   elements.copyTree.textContent = "Copied";
-  setTimeout(() => { elements.copyTree.textContent = label; }, 1200);
+  setTimeout(() => {
+    elements.copyTree.textContent = label;
+  }, 1200);
 });
 
 initialize();

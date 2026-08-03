@@ -14,10 +14,19 @@ import {
   repoRoot,
 } from "./lib/dslx-wasm.mjs";
 
-const initialSeed = Number.parseInt(process.env.FUZZ_SEED ?? "1597463007", 10) >>> 0;
-const requestedIterations = Number.parseInt(process.env.FUZZ_ITERATIONS ?? "500", 10);
-const durationSeconds = Number.parseFloat(process.env.FUZZ_DURATION_SECONDS ?? "0");
-const editsPerTrace = Number.parseInt(process.env.FUZZ_EDITS_PER_TRACE ?? "1", 10);
+const initialSeed =
+  Number.parseInt(process.env.FUZZ_SEED ?? "1597463007", 10) >>> 0;
+const requestedIterations = Number.parseInt(
+  process.env.FUZZ_ITERATIONS ?? "500",
+  10,
+);
+const durationSeconds = Number.parseFloat(
+  process.env.FUZZ_DURATION_SECONDS ?? "0",
+);
+const editsPerTrace = Number.parseInt(
+  process.env.FUZZ_EDITS_PER_TRACE ?? "1",
+  10,
+);
 
 if (!Number.isSafeInteger(requestedIterations) || requestedIterations < 1) {
   throw new Error("FUZZ_ITERATIONS must be a positive integer");
@@ -43,8 +52,28 @@ const seeds = [
   `struct S<N: u32> { x: uN[N] } fn g<N: u32>(s: S<N>) { match s.x { uN[N]:0 => (), _ => (), } }`,
 ];
 const insertions = [
-  "(", ")", "[", "]", "{", "}", "<", ">", ":", "::", ",", ";",
-  "..", "..=", "+:", "fn ", "let ", "u32:", "// fuzz\n", "'", '"', "!",
+  "(",
+  ")",
+  "[",
+  "]",
+  "{",
+  "}",
+  "<",
+  ">",
+  ":",
+  "::",
+  ",",
+  ";",
+  "..",
+  "..=",
+  "+:",
+  "fn ",
+  "let ",
+  "u32:",
+  "// fuzz\n",
+  "'",
+  '"',
+  "!",
 ];
 
 const parser = await createDslxParser();
@@ -59,7 +88,9 @@ let traces = 0;
 let previousSource = source;
 let lastEdit = null;
 const started = performance.now();
-const deadline = durationSeconds > 0 ? started + durationSeconds * 1000 : Infinity;
+const cpuStarted = process.cpuUsage();
+const deadline =
+  durationSeconds > 0 ? started + durationSeconds * 1000 : Infinity;
 
 try {
   while (
@@ -88,7 +119,8 @@ try {
         operation === 0 || available === 0
           ? 0
           : Math.min(1 + (random() % 4), available);
-      const insertText = operation === 1 ? "" : insertions[random() % insertions.length];
+      const insertText =
+        operation === 1 ? "" : insertions[random() % insertions.length];
 
       previousSource = source;
       lastEdit = { startIndex, deleteCount, insertText };
@@ -124,7 +156,10 @@ try {
       tree = result.tree;
       changedRanges += result.changedRanges.length;
     }
-    if (source !== originalSource || tree.rootNode.toString() !== originalTree) {
+    if (
+      source !== originalSource ||
+      tree.rootNode.toString() !== originalTree
+    ) {
       throw new Error("Undoing the fuzz edits did not restore the seed tree");
     }
     tree.delete();
@@ -155,6 +190,8 @@ try {
 }
 
 const elapsedSeconds = (performance.now() - started) / 1000;
+const cpuUsage = process.cpuUsage(cpuStarted);
+const cpuSeconds = (cpuUsage.user + cpuUsage.system) / 1_000_000;
 console.log(
   JSON.stringify({
     seed: initialSeed,
@@ -162,6 +199,7 @@ console.log(
     traces,
     edits_per_trace: editsPerTrace,
     elapsed_seconds: Number(elapsedSeconds.toFixed(3)),
+    cpu_seconds: Number(cpuSeconds.toFixed(3)),
     changed_ranges: changedRanges,
     highlighted_mutants: highlightedMutants,
     error_free_mutants_compared_fresh: errorFreeMutants,

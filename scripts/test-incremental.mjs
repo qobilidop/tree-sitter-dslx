@@ -24,10 +24,18 @@ const cases = [
       const targets = ["fn ", "|i|", "->", "const_assert!", "\n"];
       const target = targets[step % targets.length];
       const index = source.indexOf(target);
-      if (step === 0) return { startIndex: 0, deleteCount: 0, insertText: "// incremental\n" };
-      if (step === 1) return { startIndex: index + 1, deleteCount: 1, insertText: "item" };
-      if (step === 2) return { startIndex: index, deleteCount: 2, insertText: "" };
-      if (step === 3) return { startIndex: index, deleteCount: 0, insertText: "(" };
+      if (step === 0)
+        return {
+          startIndex: 0,
+          deleteCount: 0,
+          insertText: "// incremental\n",
+        };
+      if (step === 1)
+        return { startIndex: index + 1, deleteCount: 1, insertText: "item" };
+      if (step === 2)
+        return { startIndex: index, deleteCount: 2, insertText: "" };
+      if (step === 3)
+        return { startIndex: index, deleteCount: 0, insertText: "(" };
       return { startIndex: index, deleteCount: 1, insertText: "\r\n" };
     },
   },
@@ -51,7 +59,11 @@ const cases = [
         const index = source.indexOf("swap(array");
         return { startIndex: index, deleteCount: 0, insertText: "/*" };
       }
-      return { startIndex: source.length, deleteCount: 0, insertText: "\nfn appended() { () }\n" };
+      return {
+        startIndex: source.length,
+        deleteCount: 0,
+        insertText: "\nfn appended() { () }\n",
+      };
     },
   },
   {
@@ -59,11 +71,27 @@ const cases = [
     path: "xls/dslx/stdlib/apfloat.x",
     edit(source, step) {
       const middle = Math.floor(source.length / 2);
-      if (step === 0) return { startIndex: middle, deleteCount: 0, insertText: " " };
-      if (step === 1) return { startIndex: middle, deleteCount: 1, insertText: "\n" };
-      if (step === 2) return { startIndex: source.indexOf("struct"), deleteCount: 6, insertText: "struc" };
-      if (step === 3) return { startIndex: source.lastIndexOf("}"), deleteCount: 1, insertText: "" };
-      return { startIndex: 0, deleteCount: 0, insertText: "#![allow(nonstandard_member_naming)]\n" };
+      if (step === 0)
+        return { startIndex: middle, deleteCount: 0, insertText: " " };
+      if (step === 1)
+        return { startIndex: middle, deleteCount: 1, insertText: "\n" };
+      if (step === 2)
+        return {
+          startIndex: source.indexOf("struct"),
+          deleteCount: 6,
+          insertText: "struc",
+        };
+      if (step === 3)
+        return {
+          startIndex: source.lastIndexOf("}"),
+          deleteCount: 1,
+          insertText: "",
+        };
+      return {
+        startIndex: 0,
+        deleteCount: 0,
+        insertText: "#![allow(nonstandard_member_naming)]\n",
+      };
     },
   },
 ];

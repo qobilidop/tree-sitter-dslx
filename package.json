@@ -13,9 +13,15 @@
     "benchmark": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/benchmark.mjs",
     "fuzz": "npm run build:wasm && node scripts/fuzz.mjs",
     "fuzz:corpus": "tree-sitter fuzz --iterations 20 --edits 3",
+    "fuzz:campaign": "./scripts/run-fuzz-campaign.sh",
     "generate": "tree-sitter generate",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:docs": "node scripts/check-docs.mjs",
+    "lint:js": "for file in grammar.js playground/*.js scripts/*.mjs scripts/lib/*.mjs; do node --check \"$file\"; done",
     "test": "tree-sitter test",
     "test:incremental": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-incremental.mjs",
+    "test:incremental:full": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-incremental-full.mjs",
     "test:c-consumer": "./scripts/test-c-consumer.sh",
     "test:metamorphic": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-metamorphic.mjs",
     "test:official": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && DSLX_FMT=$(./scripts/build-dslx-frontend.sh) node scripts/test-official-frontend.mjs",
@@ -29,6 +35,7 @@
     "node": ">=24 <25"
   },
   "devDependencies": {
+    "prettier": "3.9.6",
     "web-tree-sitter": "0.26.11"
   }
 }

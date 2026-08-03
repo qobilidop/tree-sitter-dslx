@@ -5,13 +5,8 @@
       "camelcase": "DSLX",
       "scope": "source.dslx",
       "path": ".",
-      "file-types": [
-        "x",
-        "dslx"
-      ],
-      "highlights": [
-        "queries/highlights.scm"
-      ]
+      "file-types": ["x", "dslx"],
+      "highlights": ["queries/highlights.scm"]
     }
   ],
   "metadata": {

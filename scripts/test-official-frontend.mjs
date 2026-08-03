@@ -4,11 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
-import {
-  createDslxParser,
-  parseRequired,
-  repoRoot,
-} from "./lib/dslx-wasm.mjs";
+import { createDslxParser, parseRequired, repoRoot } from "./lib/dslx-wasm.mjs";
 
 const formatter = process.env.DSLX_FMT;
 if (formatter === undefined || formatter === "") {
@@ -23,7 +19,9 @@ const exclusionLines = fs
   .readFileSync(path.join(repoRoot, "test/upstream/exclusions.tsv"), "utf8")
   .split("\n")
   .filter((line) => line !== "" && !line.startsWith("#"));
-const exclusions = new Set(exclusionLines.map((line) => line.split("\t", 1)[0]));
+const exclusions = new Set(
+  exclusionLines.map((line) => line.split("\t", 1)[0]),
+);
 const officialExclusionLines = fs
   .readFileSync(
     path.join(repoRoot, "test/upstream/official-exclusions.tsv"),
@@ -48,7 +46,8 @@ function discover(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const candidate = path.join(directory, entry.name);
     if (entry.isDirectory()) return discover(candidate);
-    return entry.isFile() && (entry.name.endsWith(".x") || entry.name.endsWith(".dslx"))
+    return entry.isFile() &&
+      (entry.name.endsWith(".x") || entry.name.endsWith(".dslx"))
       ? [candidate]
       : [];
   });
@@ -103,7 +102,9 @@ for (const file of files) {
   const tree = parseRequired(parser, formatted);
   if (tree.rootNode.hasError) {
     tree.delete();
-    throw new Error(`Tree-sitter rejected official formatting: ${relativePath}`);
+    throw new Error(
+      `Tree-sitter rejected official formatting: ${relativePath}`,
+    );
   }
   tree.delete();
   formattedBytes += Buffer.byteLength(formatted);

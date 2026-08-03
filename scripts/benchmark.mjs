@@ -39,7 +39,8 @@ for (const [size, relativePath] of fixtures) {
     let started = performance.now();
     const tree = parseRequired(parser, source);
     initialTimes.push(performance.now() - started);
-    if (tree.rootNode.hasError) throw new Error(`Benchmark fixture has errors: ${relativePath}`);
+    if (tree.rootNode.hasError)
+      throw new Error(`Benchmark fixture has errors: ${relativePath}`);
 
     const startIndex = Math.floor(source.length / 2);
     const updatedSource = `${source.slice(0, startIndex)} ${source.slice(startIndex)}`;

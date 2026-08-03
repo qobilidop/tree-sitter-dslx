@@ -10,6 +10,9 @@ readonly dslx_verify_repo_dir
 
 cd "${dslx_verify_repo_dir}"
 
+npm run format:check
+npm run lint:js
+npm run lint:docs
 npm run generate
 npm test
 npm run build

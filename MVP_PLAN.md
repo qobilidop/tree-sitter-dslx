@@ -30,11 +30,11 @@ reference, parser, parser tests, and real programs are authoritative.
 `tree-sitter-dslx` is a syntax-layer component. It should be useful on every
 keystroke, including while a file is incomplete or malformed.
 
-| Project | Primary responsibility | Relationship to this project |
-| --- | --- | --- |
-| `tree-sitter-dslx` | Incremental concrete syntax trees, error recovery, structural tooling, and highlighting | This project |
-| `dslx_ls` | Parsing and type checking with the official XLS frontend, diagnostics, navigation, rename, inlay hints, and other semantic features | Complementary; not replaced or invoked by the playground |
-| `dslx-vscode` | VS Code integration for `dslx_ls`, language configuration, and TextMate-based highlighting | Complementary; this grammar is editor-independent and could become an optional future input |
+| Project            | Primary responsibility                                                                                                              | Relationship to this project                                                                |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `tree-sitter-dslx` | Incremental concrete syntax trees, error recovery, structural tooling, and highlighting                                             | This project                                                                                |
+| `dslx_ls`          | Parsing and type checking with the official XLS frontend, diagnostics, navigation, rename, inlay hints, and other semantic features | Complementary; not replaced or invoked by the playground                                    |
+| `dslx-vscode`      | VS Code integration for `dslx_ls`, language configuration, and TextMate-based highlighting                                          | Complementary; this grammar is editor-independent and could become an optional future input |
 
 The README must explain these boundaries prominently. In particular, a clean
 Tree-sitter parse does not imply that a program type-checks, and Tree-sitter
@@ -556,18 +556,18 @@ and evaluate the live parser without installing XLS or `dslx_ls`.
 The MVP is complete only when all of the following are true:
 
 - [ ] Every in-scope DSLX reference/parser-test feature is resolved in the
-  syntax coverage ledger.
+      syntax coverage ledger.
 - [ ] Generated parser artifacts reproduce exactly from locked inputs.
 - [ ] All exact-tree, recovery, highlight, C, and Wasm tests pass.
 - [ ] Every classified valid file at the pinned XLS revision parses without
-  unexpected `ERROR` or `MISSING` nodes.
+      unexpected `ERROR` or `MISSING` nodes.
 - [ ] Every corpus exclusion is narrow and justified.
 - [ ] Official-parser positive differential and formatting metamorphic checks
-  pass.
+      pass.
 - [ ] Incremental parse trees equal fresh parse trees for the required edit
-  suites.
+      suites.
 - [ ] The pre-upstream fuzz campaign records at least eight aggregate CPU-hours
-  with no unresolved crash, hang, sanitizer failure, or tree divergence.
+      with no unresolved crash, hang, sanitizer failure, or tree divergence.
 - [ ] Performance checks show no known pathological file or recovery case.
 - [ ] The C interface can be consumed by an external smoke-test project.
 - [ ] The production Wasm artifact is the one exercised by the playground.
@@ -575,11 +575,11 @@ The MVP is complete only when all of the following are true:
 - [ ] CI uses the same pinned environment and has least-privilege permissions.
 - [ ] The playground is live on GitHub Pages and linked from the README.
 - [ ] The README clearly explains complementarity with `dslx_ls` and
-  `dslx-vscode`.
+      `dslx-vscode`.
 - [ ] The validation report states evidence, baseline, exclusions, and known
-  limitations precisely.
+      limitations precisely.
 - [ ] No package has been published and no GitHub language-onboarding work has
-  been mixed into the MVP.
+      been mixed into the MVP.
 
 ## 14. Upstreaming packet
 
@@ -601,17 +601,17 @@ on ownership and compatibility policy.
 
 ## 15. Risks and mitigations
 
-| Risk | Mitigation |
-| --- | --- |
-| DSLX changes during development | Pin the baseline, update it deliberately, and optionally run a non-blocking latest-XLS canary later |
-| Rust similarity encourages an inaccurate port | Use a DSLX coverage ledger and DSLX-native tree schema; treat Rust only as prior art |
-| Official tools conflate syntax and semantics | Use a parser-only oracle where practical and keep all other differential claims asymmetric |
-| Real corpus silently omits hard files | Discover systematically, classify every exclusion, and report counts and paths |
-| Grammar ambiguity harms speed or recovery | Keep conflicts narrow, test precedence boundaries, and maintain performance/recovery cases |
-| External scanner increases native complexity | Start without one and require evidence, focused tests, fuzzing, and sanitizers before adding one |
-| Reproducible pins become stale or vulnerable | Use intentional dependency-update changes and record both reproducibility and security rationale |
-| Demo becomes a separate product | Keep it static, small, and built directly from the tested Wasm grammar and highlight query |
-| Scope expands into editor or GitHub onboarding | Preserve the explicit non-goals until after the upstreaming decision |
+| Risk                                           | Mitigation                                                                                          |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| DSLX changes during development                | Pin the baseline, update it deliberately, and optionally run a non-blocking latest-XLS canary later |
+| Rust similarity encourages an inaccurate port  | Use a DSLX coverage ledger and DSLX-native tree schema; treat Rust only as prior art                |
+| Official tools conflate syntax and semantics   | Use a parser-only oracle where practical and keep all other differential claims asymmetric          |
+| Real corpus silently omits hard files          | Discover systematically, classify every exclusion, and report counts and paths                      |
+| Grammar ambiguity harms speed or recovery      | Keep conflicts narrow, test precedence boundaries, and maintain performance/recovery cases          |
+| External scanner increases native complexity   | Start without one and require evidence, focused tests, fuzzing, and sanitizers before adding one    |
+| Reproducible pins become stale or vulnerable   | Use intentional dependency-update changes and record both reproducibility and security rationale    |
+| Demo becomes a separate product                | Keep it static, small, and built directly from the tested Wasm grammar and highlight query          |
+| Scope expands into editor or GitHub onboarding | Preserve the explicit non-goals until after the upstreaming decision                                |
 
 ## 16. Post-MVP possibilities
 

@@ -1,0 +1,68 @@
+name: Extended confidence
+
+on:
+  schedule:
+    - cron: "23 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: extended-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validation:
+    name: Official frontend and native runtime
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Install locked dependencies
+        run: ./dev.sh npm ci
+
+      - name: Validate all incremental corpus traces
+        run: ./dev.sh npm run test:incremental:full
+
+      - name: Validate with the official DSLX frontend
+        run: ./dev.sh npm run test:official
+
+      - name: Exercise the C runtime with sanitizers
+        run: ./dev.sh npm run test:sanitizers
+
+      - name: Measure parser performance
+        run: ./dev.sh npm run benchmark
+
+      - name: Run deeper Tree-sitter corpus fuzzing
+        run: ./dev.sh tree-sitter fuzz --iterations 500 --edits 12
+
+  fuzz:
+    name: Scheduled mutation campaign
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Install locked dependencies
+        run: ./dev.sh npm ci
+
+      - name: Run four parallel 15-minute workers
+        run: >-
+          ./dev.sh env
+          FUZZ_CAMPAIGN_WORKERS=4
+          FUZZ_CAMPAIGN_SECONDS=900
+          FUZZ_CAMPAIGN_MIN_CPU_SECONDS=0
+          npm run fuzz:campaign
+
+      - name: Retain campaign evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fuzz-campaign-${{ github.run_id }}
+          path: |
+            build/fuzz-campaign
+            build/fuzz-campaign-summary.json
+          if-no-files-found: error

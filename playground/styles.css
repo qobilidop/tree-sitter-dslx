@@ -16,7 +16,8 @@
   --red: #ff6b73;
   --violet: #c69cff;
   --mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
-  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+  --sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
 }
 
@@ -33,11 +34,19 @@ body {
   margin: 0;
   color: var(--text);
   background:
-    radial-gradient(circle at 78% -20%, rgb(83 216 207 / 12%), transparent 34rem),
+    radial-gradient(
+      circle at 78% -20%,
+      rgb(83 216 207 / 12%),
+      transparent 34rem
+    ),
     linear-gradient(rgb(255 255 255 / 2%) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 2%) 1px, transparent 1px),
     var(--bg);
-  background-size: auto, 32px 32px, 32px 32px, auto;
+  background-size:
+    auto,
+    32px 32px,
+    32px 32px,
+    auto;
   font-family: var(--sans);
 }
 
@@ -302,7 +311,9 @@ select:disabled {
 }
 
 @keyframes pulse {
-  to { opacity: 0.35; }
+  to {
+    opacity: 0.35;
+  }
 }
 
 .panes {
@@ -398,16 +409,43 @@ h2 {
   background: rgb(83 216 207 / 25%);
 }
 
-.hl-comment { color: #657286; font-style: italic; }
-.hl-keyword { color: var(--violet); }
-.hl-function { color: var(--blue); }
-.hl-type, .hl-type-builtin { color: var(--cyan); }
-.hl-variable-parameter { color: #e8cf8c; }
-.hl-constant, .hl-number, .hl-boolean { color: var(--amber); }
-.hl-property, .hl-attribute { color: #89bdf8; }
-.hl-string, .hl-string-special { color: var(--lime); }
-.hl-operator { color: #ff8f96; }
-.hl-punctuation-bracket, .hl-punctuation-delimiter { color: #7f8da1; }
+.hl-comment {
+  color: #657286;
+  font-style: italic;
+}
+.hl-keyword {
+  color: var(--violet);
+}
+.hl-function {
+  color: var(--blue);
+}
+.hl-type,
+.hl-type-builtin {
+  color: var(--cyan);
+}
+.hl-variable-parameter {
+  color: #e8cf8c;
+}
+.hl-constant,
+.hl-number,
+.hl-boolean {
+  color: var(--amber);
+}
+.hl-property,
+.hl-attribute {
+  color: #89bdf8;
+}
+.hl-string,
+.hl-string-special {
+  color: var(--lime);
+}
+.hl-operator {
+  color: #ff8f96;
+}
+.hl-punctuation-bracket,
+.hl-punctuation-delimiter {
+  color: #7f8da1;
+}
 .hl-error {
   color: #fff;
   background: rgb(255 107 115 / 18%);
@@ -464,8 +502,12 @@ h2 {
   background: rgb(255 107 115 / 7%);
 }
 
-.tree-field { color: #718096; }
-.tree-range { color: #5e6b7e; }
+.tree-field {
+  color: #718096;
+}
+.tree-range {
+  color: #5e6b7e;
+}
 
 footer {
   display: flex;
@@ -552,5 +594,7 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulse { animation: none; }
+  .pulse {
+    animation: none;
+  }
 }

@@ -22,11 +22,18 @@ const required = [
   "web-tree-sitter.wasm",
 ];
 for (const relativePath of required) {
-  assert.ok(fs.existsSync(path.join(dist, relativePath)), `Missing ${relativePath}`);
+  assert.ok(
+    fs.existsSync(path.join(dist, relativePath)),
+    `Missing ${relativePath}`,
+  );
 }
 
 const html = fs.readFileSync(path.join(dist, "index.html"), "utf8");
-assert.doesNotMatch(html, /(?:href|src)="\//, "Assets must use a Pages-safe relative path");
+assert.doesNotMatch(
+  html,
+  /(?:href|src)="\//,
+  "Assets must use a Pages-safe relative path",
+);
 assert.match(html, /dslx_ls/);
 assert.match(html, /Syntax only/);
 assert.deepEqual(
@@ -53,4 +60,6 @@ for (const example of examples) {
 }
 parser.delete();
 
-console.log(`Playground smoke passed: assets=${required.length} examples=${examples.length}`);
+console.log(
+  `Playground smoke passed: assets=${required.length} examples=${examples.length}`,
+);

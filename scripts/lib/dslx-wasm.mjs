@@ -6,7 +6,10 @@ import { fileURLToPath } from "node:url";
 
 import { Language, Parser, Query } from "web-tree-sitter";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const repoRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../..",
+);
 const languageWasm = path.join(repoRoot, "build/tree-sitter-dslx.wasm");
 const highlightsQuery = path.join(repoRoot, "queries/highlights.scm");
 
@@ -103,7 +106,8 @@ export function replaceIncrementally(
   const incrementalTree = parseRequired(parser, updatedSource, tree);
   const changedRanges = tree.getChangedRanges(incrementalTree);
   try {
-    if (compareFresh) assertTreeMatchesFresh(parser, incrementalTree, updatedSource);
+    if (compareFresh)
+      assertTreeMatchesFresh(parser, incrementalTree, updatedSource);
   } catch (error) {
     incrementalTree.delete();
     throw error;

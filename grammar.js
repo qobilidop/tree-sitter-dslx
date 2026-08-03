@@ -85,7 +85,11 @@ module.exports = grammar({
 
     attribute_argument: ($) =>
       choice(
-        seq(field("name", $.identifier), "=", field("value", $.attribute_value)),
+        seq(
+          field("name", $.identifier),
+          "=",
+          field("value", $.attribute_value),
+        ),
         $.attribute_value,
       ),
 
@@ -121,11 +125,7 @@ module.exports = grammar({
           field("name", "self"),
           optional(seq(":", field("type", $.type_annotation))),
         ),
-        seq(
-          field("name", $.identifier),
-          ":",
-          field("type", $.type_annotation),
-        ),
+        seq(field("name", $.identifier), ":", field("type", $.type_annotation)),
       ),
 
     parametric_bindings: ($) =>
@@ -163,19 +163,21 @@ module.exports = grammar({
     use_statement: ($) => seq("use", field("tree", $.use_tree), ";"),
 
     use_tree: ($) =>
-      prec.right(seq(
-        field("path", choice($.identifier, "self")),
-        optional(
-          seq(
-            "::",
-            choice(
-              field("child", $.use_tree),
-              seq("{", optional(commaSep1($.use_tree)), optional(","), "}"),
+      prec.right(
+        seq(
+          field("path", choice($.identifier, "self")),
+          optional(
+            seq(
+              "::",
+              choice(
+                field("child", $.use_tree),
+                seq("{", optional(commaSep1($.use_tree)), optional(","), "}"),
+              ),
             ),
           ),
+          optional(seq("as", field("alias", $.identifier))),
         ),
-        optional(seq("as", field("alias", $.identifier))),
-      )),
+      ),
 
     type_alias: ($) =>
       seq(
@@ -356,19 +358,16 @@ module.exports = grammar({
       ),
 
     type_path: ($) =>
-      prec.right(seq(
-        choice($.identifier, "Self"),
-        repeat(seq("::", $.identifier)),
-        optional(field("arguments", $.parametric_arguments)),
-      )),
+      prec.right(
+        seq(
+          choice($.identifier, "Self"),
+          repeat(seq("::", $.identifier)),
+          optional(field("arguments", $.parametric_arguments)),
+        ),
+      ),
 
     tuple_type: ($) =>
-      seq(
-        "(",
-        optional(commaSep1($.type_annotation)),
-        optional(","),
-        ")",
-      ),
+      seq("(", optional(commaSep1($.type_annotation)), optional(","), ")"),
 
     channel_type: ($) =>
       seq(
@@ -507,10 +506,17 @@ module.exports = grammar({
     tuple_expression: ($) =>
       seq(
         "(",
-        optional(choice(
-          ",",
-          seq($.expression, ",", optional(commaSep1($.expression)), optional(",")),
-        )),
+        optional(
+          choice(
+            ",",
+            seq(
+              $.expression,
+              ",",
+              optional(commaSep1($.expression)),
+              optional(","),
+            ),
+          ),
+        ),
         ")",
       ),
 
@@ -572,10 +578,7 @@ module.exports = grammar({
           field("condition", $.expression),
           field("consequence", $.block),
           optional(
-            seq(
-              "else",
-              field("alternative", choice($.block, $.if_expression)),
-            ),
+            seq("else", field("alternative", choice($.block, $.if_expression))),
           ),
         ),
       ),
@@ -673,13 +676,15 @@ module.exports = grammar({
       ),
 
     spawn_expression: ($) =>
-      prec.right(seq(
-        "spawn",
-        field("callee", $.path_expression),
-        optional(field("parametrics", $.parametric_arguments)),
-        field("arguments", $.argument_list),
-        optional(field("next_arguments", $.argument_list)),
-      )),
+      prec.right(
+        seq(
+          "spawn",
+          field("callee", $.path_expression),
+          optional(field("parametrics", $.parametric_arguments)),
+          field("arguments", $.argument_list),
+          optional(field("next_arguments", $.argument_list)),
+        ),
+      ),
 
     macro_invocation: ($) =>
       prec(
@@ -728,7 +733,11 @@ module.exports = grammar({
     cast_expression: ($) =>
       prec.left(
         PREC.cast,
-        seq(field("value", $.expression), "as", field("type", $.type_annotation)),
+        seq(
+          field("value", $.expression),
+          "as",
+          field("type", $.type_annotation),
+        ),
       ),
 
     call_expression: ($) =>
@@ -775,13 +784,22 @@ module.exports = grammar({
     tuple_index_expression: ($) =>
       prec.left(
         PREC.postfix,
-        seq(field("value", $.expression), ".", field("index", $.integer_literal)),
+        seq(
+          field("value", $.expression),
+          ".",
+          field("index", $.integer_literal),
+        ),
       ),
 
     index_expression: ($) =>
       prec.left(
         PREC.postfix,
-        seq(field("value", $.expression), "[", field("index", $.expression), "]"),
+        seq(
+          field("value", $.expression),
+          "[",
+          field("index", $.expression),
+          "]",
+        ),
       ),
 
     slice_expression: ($) =>
@@ -819,13 +837,24 @@ module.exports = grammar({
       token(choice(/0[xX][0-9a-fA-F_]+/, /0[bB][01_]+/, /0|[1-9][0-9]*/)),
 
     character_literal: (_) =>
-      token(seq("'", choice(/[^'\\\n\r]/, /\\(?:[nrt\\0'\"]|x[0-9a-fA-F]{2})/), "'")),
+      token(
+        seq(
+          "'",
+          choice(/[^'\\\n\r]/, /\\(?:[nrt\\0'\"]|x[0-9a-fA-F]{2})/),
+          "'",
+        ),
+      ),
 
     string_literal: (_) =>
       token(
         seq(
           '"',
-          repeat(choice(/[^"\\]/, /\\(?:[nrt\\0'\"]|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F]{1,6}\})/)),
+          repeat(
+            choice(
+              /[^"\\]/,
+              /\\(?:[nrt\\0'\"]|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F]{1,6}\})/,
+            ),
+          ),
           '"',
         ),
       ),
@@ -834,7 +863,12 @@ module.exports = grammar({
       token(
         seq(
           "`",
-          repeat(choice(/[^`\\]/, /\\(?:[nrt\\0'\"]|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F]{1,6}\})/)),
+          repeat(
+            choice(
+              /[^`\\]/,
+              /\\(?:[nrt\\0'\"]|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F]{1,6}\})/,
+            ),
+          ),
           "`",
         ),
       ),
