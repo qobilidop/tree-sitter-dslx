@@ -343,34 +343,37 @@ no suitable pinned binary is available.
 
 ### 8.1 `dev.sh` behavior
 
-Design `dev.sh` for this repository from first principles. Its required user
-interface is:
+Design `dev.sh` as a transparent container boundary. Its entire user interface
+is:
 
 ```text
-./dev.sh                 Open an interactive development shell
-./dev.sh --build         Build the development image and exit
-./dev.sh <command...>    Run an exact command in the development container
-./dev.sh --help          Show concise usage and environment overrides
+./dev.sh <script-or-command> [args...]
 ```
 
-The script will:
+For example, `./dev.sh bash` opens a shell, `./dev.sh npm test` runs the test
+command, and `./dev.sh ./scripts/validate.sh` runs a repository script. With no
+command, it prints the usage line and exits unsuccessfully.
+
+The script performs only the container management required to execute that
+command:
 
 - Locate the repository correctly regardless of the caller's directory.
 - Perform a cached local build so the environment cannot silently drift behind
   the checked-in Dockerfile.
 - Avoid a dependency on a remotely published development image.
+- Execute the supplied command directly, without an implicit shell, aliases,
+  task dispatch, or special command flags.
 - Preserve argument boundaries, signals, exit status, and interactive TTY
   behavior.
 - Bind-mount the repository and arrange writable container-owned caches.
 - Run with host-compatible file ownership without requiring generated files to
   be repaired with `sudo`.
-- Select the native platform unless an explicit project-specific environment
-  variable overrides it.
+- Select the native host platform.
 - Fail clearly when Docker or another required host capability is unavailable.
 - Work noninteractively in CI.
 
-Keep it small. It is a container entrance, not a second build system; project
-tasks remain ordinary pinned package scripts or checked-in test scripts.
+It is not a task runner or a second build system. Project tasks remain ordinary
+pinned package scripts or checked-in repository scripts.
 
 ## 9. Continuous integration
 
