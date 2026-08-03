@@ -17,6 +17,7 @@
     "test:incremental": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-incremental.mjs",
     "test:c-consumer": "./scripts/test-c-consumer.sh",
     "test:metamorphic": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-metamorphic.mjs",
+    "test:official": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && DSLX_FMT=$(./scripts/build-dslx-frontend.sh) node scripts/test-official-frontend.mjs",
     "test:sanitizers": "./scripts/test-sanitizers.sh",
     "test:upstream": "./scripts/validate-xls-corpus.sh",
     "test:wasm": "npm run build:wasm && node scripts/wasm-smoke.mjs",

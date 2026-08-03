@@ -1,0 +1,40 @@
+# Phase	Path	Reason
+parse	xls/dslx/frontend/builtin_stubs.x	Internal builtin signature catalog permits `T: type` only through a specialized XLS parser path.
+parse	xls/dslx/tests/errors/co_recursion.x	Semantic-negative fixture: forward name lookup rejects the mutually recursive function reference.
+parse	xls/dslx/tests/errors/double_define_parameter.x	Semantic-negative fixture: duplicate parameter binding.
+parse	xls/dslx/tests/errors/double_define_test_function.x	Semantic-negative fixture: duplicate test function definition.
+parse	xls/dslx/tests/errors/double_define_top_level_function.x	Semantic-negative fixture: duplicate top-level function definition.
+parse	xls/dslx/tests/errors/duplicate_top_name.x	Semantic-negative fixture: duplicate top-level type name.
+parse	xls/dslx/tests/errors/duplicate_typedef_binding_in_module.x	Semantic-negative fixture: duplicate type alias binding.
+parse	xls/dslx/tests/errors/equals_rhs_undefined_nameref.x	Semantic-negative fixture: unresolved value name.
+parse	xls/dslx/tests/errors/invalid_parameter_cast.x	Contextual-negative fixture: old-style cast operand is not a permitted constant form.
+parse	xls/dslx/tests/errors/let_destructure_same_name.x	Semantic-negative fixture: duplicate name in a destructuring pattern.
+parse	xls/dslx/tests/errors/match_multi_pattern_with_bindings.x	Semantic-negative fixture: alternative match patterns both bind names.
+parse	xls/dslx/tests/errors/multiple_mod_level_const_bindings.x	Semantic-negative fixture: duplicate module constant binding.
+parse	xls/dslx/tests/errors/precise_struct_error.x	Semantic-negative fixture: unresolved name in a struct value.
+parse	xls/dslx/tests/errors/trace_fmt_bad_string.x	Macro-validation fixture: unmatched brace in the trace format string.
+parse	xls/dslx/tests/errors/trace_fmt_empty.x	Macro-validation fixture: trace macro has no arguments.
+parse	xls/dslx/tests/errors/trace_fmt_no_parametrics.x	Macro-validation fixture: trace macro has forbidden parametric arguments.
+parse	xls/dslx/tests/errors/trace_fmt_not_string.x	Macro-validation fixture: trace macro format argument is not a string.
+parse	xls/dslx/tests/errors/vtrace_fmt_bad_string.x	Macro-validation fixture: unmatched brace in the verbose trace format string.
+parse	xls/dslx/tests/errors/vtrace_fmt_empty.x	Macro-validation fixture: verbose trace macro has no arguments.
+parse	xls/dslx/tests/errors/vtrace_fmt_no_parametrics.x	Macro-validation fixture: verbose trace macro has forbidden parametric arguments.
+parse	xls/dslx/tests/errors/vtrace_fmt_one_arg.x	Macro-validation fixture: verbose trace macro has too few arguments.
+format	xls/dslx/tests/errors/missing_semi.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/examples/apfloat_add_parallel/apfloat_add_parallel.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/examples/protobuf/varint_streaming_decode.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/comp_block_dec.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/csr_config.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/fse_table_creator.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/huffman_code_builder.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/huffman_prescan.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/huffman_weights_dec.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/literals_block_header_dec.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/literals_decoder.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/memory/axi_ram_reader.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/memory/axi_reader.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/memory/mem_reader.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/refilling_shift_buffer.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/sequence_conf_dec.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/zstd_dec.x	Pinned formatter refuses the file because formatting would delete a comment.
+format	xls/modules/zstd/zstd_dec_test.x	Pinned formatter refuses the file because formatting would delete a comment.
