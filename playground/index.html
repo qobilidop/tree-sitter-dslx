@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A live, incremental Tree-sitter playground for XLS DSLX."
+    />
+    <title>DSLX syntax lab · Tree-sitter</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <a class="wordmark" href="./" aria-label="DSLX syntax lab home">
+          <span class="wordmark-mark" aria-hidden="true">∿</span>
+          <span>DSLX syntax lab</span>
+        </a>
+        <p>Incremental concrete syntax trees, running entirely in your browser.</p>
+      </div>
+      <nav aria-label="Project links">
+        <a href="https://github.com/qobilidop/tree-sitter-dslx">Repository</a>
+        <a href="https://google.github.io/xls/dslx_language_server/">dslx_ls</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="intro-title">
+        <div>
+          <p class="eyebrow">TREE-SITTER × XLS</p>
+          <h1 id="intro-title">See DSLX recover as you type.</h1>
+          <p class="lede">
+            Edit a hardware-oriented program, inspect its concrete syntax tree,
+            and deliberately break it. The parser stays useful on every keystroke.
+          </p>
+        </div>
+        <aside class="scope-note">
+          <span class="scope-dot" aria-hidden="true"></span>
+          <div>
+            <strong>Syntax only</strong>
+            <p>
+              This demo complements <code>dslx_ls</code> and
+              <code>dslx-vscode</code>; it does not type-check or compile code.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="workbench" aria-label="DSLX parser workbench">
+        <div class="toolbar">
+          <label class="example-picker">
+            <span>Example</span>
+            <select id="example-select" disabled></select>
+          </label>
+          <p id="example-description" class="example-description"></p>
+          <div class="toolbar-actions">
+            <button id="error-toggle" class="button button-warn" disabled>
+              Introduce an error
+            </button>
+            <button id="copy-tree" class="button" disabled>Copy tree</button>
+          </div>
+        </div>
+
+        <div class="metrics" aria-live="polite">
+          <div>
+            <span class="metric-label">Parser</span>
+            <strong id="parser-status"><span class="pulse"></span> Loading Wasm</strong>
+          </div>
+          <div>
+            <span class="metric-label">Parse</span>
+            <strong id="parse-duration">—</strong>
+          </div>
+          <div>
+            <span class="metric-label">Changed ranges</span>
+            <strong id="changed-ranges">—</strong>
+          </div>
+          <div>
+            <span class="metric-label">Recovery nodes</span>
+            <strong id="error-count">—</strong>
+          </div>
+          <div>
+            <span class="metric-label">Named nodes</span>
+            <strong id="node-count">—</strong>
+          </div>
+        </div>
+
+        <div class="panes">
+          <section class="pane source-pane" aria-labelledby="source-heading">
+            <div class="pane-heading">
+              <div>
+                <span class="pane-index">01</span>
+                <h2 id="source-heading">Source</h2>
+              </div>
+              <span id="cursor-position" class="pane-detail">Ln 1, Col 1</span>
+            </div>
+            <div class="editor-shell">
+              <pre id="highlight-layer" aria-hidden="true"><code></code></pre>
+              <textarea
+                id="source-editor"
+                aria-label="Editable DSLX source"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                disabled
+              ></textarea>
+            </div>
+          </section>
+
+          <section class="pane tree-pane" aria-labelledby="tree-heading">
+            <div class="pane-heading">
+              <div>
+                <span class="pane-index">02</span>
+                <h2 id="tree-heading">Concrete syntax tree</h2>
+              </div>
+              <span class="pane-detail">Select a node to reveal source</span>
+            </div>
+            <div id="tree-view" class="tree-view" tabindex="0">
+              <p class="tree-placeholder">Initializing the parser…</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Parser ABI 15 · WebAssembly · no server round trips</span>
+      <a
+        href="https://github.com/google/xls/commit/69f84975c32f3471c113a2115f8d0e344ca4d73b"
+      >
+        XLS baseline 69f8497
+      </a>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

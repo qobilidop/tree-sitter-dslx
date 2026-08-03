@@ -20,6 +20,7 @@ npm run test:incremental
 npm run fuzz
 npm run fuzz:corpus
 npm run test:c-consumer
+npm run test:playground
 
 shellcheck dev.sh scripts/*.sh
 

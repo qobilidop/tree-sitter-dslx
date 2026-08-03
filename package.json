@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tree-sitter build",
     "build:wasm": "mkdir -p build && tree-sitter build --wasm --output build/tree-sitter-dslx.wasm",
+    "build:playground": "./scripts/build-playground.sh",
     "benchmark": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/benchmark.mjs",
     "fuzz": "npm run build:wasm && node scripts/fuzz.mjs",
     "fuzz:corpus": "tree-sitter fuzz --iterations 20 --edits 3",
@@ -18,6 +19,7 @@
     "test:c-consumer": "./scripts/test-c-consumer.sh",
     "test:metamorphic": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && node scripts/test-metamorphic.mjs",
     "test:official": "npm run build:wasm && ./scripts/fetch-xls-corpus.sh >/dev/null && DSLX_FMT=$(./scripts/build-dslx-frontend.sh) node scripts/test-official-frontend.mjs",
+    "test:playground": "npm run build:playground && node scripts/test-playground.mjs",
     "test:sanitizers": "./scripts/test-sanitizers.sh",
     "test:upstream": "./scripts/validate-xls-corpus.sh",
     "test:wasm": "npm run build:wasm && node scripts/wasm-smoke.mjs",

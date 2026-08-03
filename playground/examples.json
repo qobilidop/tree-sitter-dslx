@@ -1,0 +1,26 @@
+[
+  {
+    "id": "parametrics",
+    "label": "Parametric function",
+    "description": "Width-parametric arithmetic and a compile-time branch.",
+    "source": "fn saturating_increment<N: u32>(x: uN[N]) -> uN[N] {\n  const MAX = all_ones!<uN[N]>();\n  if x == MAX { x } else { x + uN[N]:1 }\n}\n\nconst_assert!(saturating_increment(u8:41) == u8:42);\n"
+  },
+  {
+    "id": "types",
+    "label": "Types and matching",
+    "description": "An enum, a struct, qualified constants, and match arms.",
+    "source": "enum Mode : u2 {\n  IDLE = 0,\n  RUN = 1,\n  FAULT = 2,\n}\n\nstruct Status {\n  mode: Mode,\n  payload: u32,\n}\n\nfn read(status: Status) -> u32 {\n  match status.mode {\n    Mode::RUN => status.payload,\n    Mode::FAULT => u32:0xffff_ffff,\n    _ => u32:0,\n  }\n}\n"
+  },
+  {
+    "id": "arrays",
+    "label": "Arrays and slices",
+    "description": "Array update, bit slicing, and concatenation operators.",
+    "source": "fn replace_lane(values: u16[4], lane: u32, value: u16) -> u16[4] {\n  update(values, lane, value)\n}\n\nfn unpack(word: u32) -> (u8, u8, u16) {\n  let low = word[0+:u8];\n  let middle = word[8:16];\n  let high = word[16+:u16];\n  (low, middle, high)\n}\n\nfn repack(parts: (u8, u8, u16)) -> u32 {\n  parts.2 ++ parts.1 ++ parts.0\n}\n"
+  },
+  {
+    "id": "proc",
+    "label": "Proc and channels",
+    "description": "A stateful proc with configuration, send, and next state.",
+    "source": "proc Counter {\n  output: chan<u32> out;\n\n  config(output: chan<u32> out) {\n    (output,)\n  }\n\n  init { u32:0 }\n\n  next(state: u32) {\n    send(join(), output, state);\n    state + u32:1\n  }\n}\n"
+  }
+]
