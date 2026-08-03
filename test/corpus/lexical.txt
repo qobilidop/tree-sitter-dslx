@@ -1,0 +1,103 @@
+==================
+Comments, tick identifiers, and labels
+==================
+
+// A module comment.
+fn lexical<N': u32>(value': uN[N']) -> uN[N'] {
+  'loop: for (i, acc) in u32:0..N' {
+    // Comments are extras inside expressions.
+    acc + value'
+  } (uN[N']:0)
+}
+
+---
+
+(source_file
+  (line_comment)
+  (function_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (parameter_list
+      (parameter
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier))))))
+    (array_type
+      (builtin_type)
+      (array_dimension
+        (path_expression
+          (identifier))))
+    (block
+      (labeled_expression
+        (identifier)
+        (for_expression
+          (pattern
+            (tuple_pattern
+              (pattern
+                (identifier))
+              (pattern
+                (identifier))))
+          (binary_expression
+            (typed_expression
+              (builtin_type)
+              (integer_literal))
+            (path_expression
+              (identifier)))
+          (block
+            (line_comment)
+            (binary_expression
+              (path_expression
+                (identifier))
+              (path_expression
+                (identifier))))
+          (typed_expression
+            (array_type
+              (builtin_type)
+              (array_dimension
+                (path_expression
+                  (identifier))))
+            (integer_literal)))))))
+
+==================
+Escaped characters and strings
+==================
+
+fn escapes() {
+  let quote = '\'';
+  let hex = '\x41';
+  let text = "tab:\t slash:\\ unicode:\u{3bb}";
+  (quote, hex, text)
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (character_literal))
+      (let_statement
+        (pattern
+          (identifier))
+        (character_literal))
+      (let_statement
+        (pattern
+          (identifier))
+        (string_literal))
+      (tuple_expression
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))))))

@@ -1,0 +1,75 @@
+==================
+Module attributes and imports
+==================
+
+#![feature(type_inference_v2)]
+import std;
+import xls.modules.foo as foo;
+
+---
+
+(source_file
+  (module_attribute
+    (attribute_body
+      (identifier)
+      (attribute_arguments
+        (attribute_argument
+          (attribute_value
+            (identifier))))))
+  (import_statement
+    (import_path
+      (identifier)))
+  (import_statement
+    (import_path
+      (identifier)
+      (identifier)
+      (identifier))
+    (identifier)))
+
+==================
+Use tree, visibility, constants, and attributes
+==================
+
+#![feature(use_syntax)]
+use foo::bar::{self, Baz as Renamed};
+pub const WIDTH: u32 = u32:32;
+#[sv_type("logic [31:0]")]
+pub type Word = u32;
+
+---
+
+(source_file
+  (module_attribute
+    (attribute_body
+      (identifier)
+      (attribute_arguments
+        (attribute_argument
+          (attribute_value
+            (identifier))))))
+  (use_statement
+    (use_tree
+      (identifier)
+      (use_tree
+        (identifier)
+        (use_tree)
+        (use_tree
+          (identifier)
+          (identifier)))))
+  (constant_definition
+    (visibility_modifier)
+    (identifier)
+    (builtin_type)
+    (typed_expression
+      (builtin_type)
+      (integer_literal)))
+  (type_alias
+    (attribute
+      (attribute_body
+        (identifier)
+        (attribute_arguments
+          (attribute_argument
+            (attribute_value
+              (string_literal))))))
+    (visibility_modifier)
+    (identifier)
+    (builtin_type)))

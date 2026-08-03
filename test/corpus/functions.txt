@@ -1,0 +1,223 @@
+==================
+Parametric function with a derived default
+==================
+
+fn width<N: u32, M: u32 = {N + u32:1}>(x: uN[N]) -> uN[M] {
+  x as uN[M]
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type))
+      (parametric_binding
+        (identifier)
+        (builtin_type)
+        (braced_parametric_argument
+          (binary_expression
+            (path_expression
+              (identifier))
+            (typed_expression
+              (builtin_type)
+              (integer_literal))))))
+    (parameter_list
+      (parameter
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier))))))
+    (array_type
+      (builtin_type)
+      (array_dimension
+        (path_expression
+          (identifier))))
+    (block
+      (cast_expression
+        (path_expression
+          (identifier))
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier))))))))
+
+==================
+Generic calls, function references, and macros
+==================
+
+fn apply<N: u32>(x: uN[N]) -> uN[N] {
+  let y = identity<N>(x);
+  map(x, identity<N>);
+  assert_eq(y, zero!<uN[N]>());
+  y
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (parameter_list
+      (parameter
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier))))))
+    (array_type
+      (builtin_type)
+      (array_dimension
+        (path_expression
+          (identifier))))
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (call_expression
+          (function_reference
+            (path_expression
+              (identifier))
+            (parametric_arguments
+              (parametric_argument
+                (path_expression
+                  (identifier)))))
+          (argument_list
+            (path_expression
+              (identifier)))))
+      (expression_statement
+        (call_expression
+          (path_expression
+            (identifier))
+          (argument_list
+            (path_expression
+              (identifier))
+            (function_reference
+              (path_expression
+                (identifier))
+              (parametric_arguments
+                (parametric_argument
+                  (path_expression
+                    (identifier))))))))
+      (expression_statement
+        (call_expression
+          (path_expression
+            (identifier))
+          (argument_list
+            (path_expression
+              (identifier))
+            (macro_invocation
+              (macro_identifier)
+              (parametric_arguments
+                (parametric_argument
+                  (array_type
+                    (builtin_type)
+                    (array_dimension
+                      (path_expression
+                        (identifier))))))
+              (argument_list)))))
+      (path_expression
+        (identifier)))))
+
+==================
+Trait stubs and lambda forms
+==================
+
+#![feature(traits)]
+trait ToBits {
+  fn to_bits(self) -> bits[bit_count<Self>()];
+  fn merge(self: Self, rhs: Self) -> Self;
+}
+
+fn lambdas() {
+  let a = |x: u32| { x + u32:1 };
+  let b = || u32:0;
+  let c = |x| -> u32 { x };
+  ()
+}
+
+---
+
+(source_file
+  (module_attribute
+    (attribute_body
+      (identifier)
+      (attribute_arguments
+        (attribute_argument
+          (attribute_value
+            (identifier))))))
+  (trait_definition
+    (identifier)
+    (trait_member
+      (function_definition
+        (identifier)
+        (parameter_list
+          (parameter))
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (call_expression
+              (function_reference
+                (path_expression
+                  (identifier))
+                (parametric_arguments
+                  (parametric_argument
+                    (path_expression))))
+              (argument_list))))))
+    (trait_member
+      (function_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (type_path))
+          (parameter
+            (identifier)
+            (type_path)))
+        (type_path))))
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (lambda_expression
+          (lambda_parameter
+            (identifier)
+            (builtin_type))
+          (block
+            (binary_expression
+              (path_expression
+                (identifier))
+              (typed_expression
+                (builtin_type)
+                (integer_literal))))))
+      (let_statement
+        (pattern
+          (identifier))
+        (lambda_expression
+          (typed_expression
+            (builtin_type)
+            (integer_literal))))
+      (let_statement
+        (pattern
+          (identifier))
+        (lambda_expression
+          (lambda_parameter
+            (identifier))
+          (builtin_type)
+          (block
+            (path_expression
+              (identifier)))))
+      (tuple_expression))))

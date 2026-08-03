@@ -1,0 +1,176 @@
+==================
+Test, quickcheck, and channel attributes
+==================
+
+#![feature(channel_attributes)]
+#[quickcheck(test_count=1000)]
+fn commutes(x: u32, y: u32) -> bool { x + y == y + x }
+
+#[test]
+fn smoke() { assert!(true, "smoke"); }
+
+#[channel(kind=streaming, depth=2, bypass=true)]
+fn channel_example() { let channels = chan<u32>("data"); () }
+
+---
+
+(source_file
+  (module_attribute
+    (attribute_body
+      (identifier)
+      (attribute_arguments
+        (attribute_argument
+          (attribute_value
+            (identifier))))))
+  (function_definition
+    (attribute
+      (attribute_body
+        (identifier)
+        (attribute_arguments
+          (attribute_argument
+            (identifier)
+            (attribute_value
+              (integer_literal))))))
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (builtin_type))
+      (parameter
+        (identifier)
+        (builtin_type)))
+    (builtin_type)
+    (block
+      (binary_expression
+        (binary_expression
+          (path_expression
+            (identifier))
+          (path_expression
+            (identifier)))
+        (binary_expression
+          (path_expression
+            (identifier))
+          (path_expression
+            (identifier))))))
+  (function_definition
+    (attribute
+      (attribute_body
+        (identifier)))
+    (identifier)
+    (parameter_list)
+    (block
+      (expression_statement
+        (macro_invocation
+          (macro_identifier)
+          (argument_list
+            (boolean_literal)
+            (string_literal))))))
+  (function_definition
+    (attribute
+      (attribute_body
+        (identifier)
+        (attribute_arguments
+          (attribute_argument
+            (identifier)
+            (attribute_value
+              (identifier)))
+          (attribute_argument
+            (identifier)
+            (attribute_value
+              (integer_literal)))
+          (attribute_argument
+            (identifier)
+            (attribute_value
+              (boolean_literal))))))
+    (identifier)
+    (parameter_list)
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (channel_expression
+          (builtin_type)
+          (string_literal)))
+      (tuple_expression))))
+
+==================
+Multiline extern Verilog attribute
+==================
+
+#[extern_verilog("external_adder #(
+  .WIDTH({W})
+) inst (
+  .x({x}), .y({y}), .out({return})
+);")]
+fn external_adder<W: u32>(x: uN[W], y: uN[W]) -> uN[W] { x + y }
+
+---
+
+(source_file
+  (function_definition
+    (attribute
+      (attribute_body
+        (identifier)
+        (attribute_arguments
+          (attribute_argument
+            (attribute_value
+              (string_literal))))))
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (parameter_list
+      (parameter
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier)))))
+      (parameter
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier))))))
+    (array_type
+      (builtin_type)
+      (array_dimension
+        (path_expression
+          (identifier))))
+    (block
+      (binary_expression
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))))))
+
+==================
+Fuzz test backtick domain
+==================
+
+#[fuzz_test(`{"calls_per_sample": 32}`)]
+fn fuzz_target(x: u32) -> u32 { x }
+
+---
+
+(source_file
+  (function_definition
+    (attribute
+      (attribute_body
+        (identifier)
+        (attribute_arguments
+          (attribute_argument
+            (attribute_value
+              (backtick_string_literal))))))
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (builtin_type)))
+    (builtin_type)
+    (block
+      (path_expression
+        (identifier)))))

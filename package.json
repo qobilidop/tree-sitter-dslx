@@ -11,6 +11,7 @@
     "build:wasm": "mkdir -p build && tree-sitter build --wasm --output build/tree-sitter-dslx.wasm",
     "generate": "tree-sitter generate",
     "test": "tree-sitter test",
+    "test:upstream": "./scripts/validate-xls-corpus.sh",
     "verify": "./scripts/verify.sh"
   },
   "engines": {

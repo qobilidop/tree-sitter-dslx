@@ -1,0 +1,88 @@
+==================
+Incomplete expression preserves the following function
+==================
+
+fn broken(x: u32) -> u32 {
+  x +
+}
+
+fn intact() -> u32 { u32:42 }
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (builtin_type)))
+    (builtin_type)
+    (block
+      (binary_expression
+        (path_expression
+          (identifier))
+        (path_expression
+          (MISSING identifier)))))
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (builtin_type)
+    (block
+      (typed_expression
+        (builtin_type)
+        (integer_literal)))))
+
+==================
+Incomplete parametrics preserve the following constant
+==================
+
+fn broken<N: u32(x: u32) -> u32 { x }
+const AFTER = u32:1;
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type))
+      (MISSING ">"))
+    (parameter_list
+      (parameter
+        (identifier)
+        (builtin_type)))
+    (builtin_type)
+    (block
+      (path_expression
+        (identifier))))
+  (constant_definition
+    (identifier)
+    (typed_expression
+      (builtin_type)
+      (integer_literal))))
+
+==================
+Unclosed proc member type preserves local recovery
+==================
+
+proc Broken {
+  input: chan<u32 in;
+  output: chan<u32> out;
+}
+
+---
+
+(source_file
+  (proc_definition
+    (identifier)
+    (ERROR
+      (identifier)
+      (ERROR
+        (builtin_type)
+        (identifier)
+        (identifier))
+      (channel_type
+        (builtin_type)))))

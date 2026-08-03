@@ -1,0 +1,235 @@
+==================
+Aliases, tuples, arrays, and channels
+==================
+
+type Pair = (u32, bool);
+type Matrix = u8[4][4];
+type Input = chan<u8>[2] in;
+
+---
+
+(source_file
+  (type_alias
+    (identifier)
+    (tuple_type
+      (builtin_type)
+      (builtin_type)))
+  (type_alias
+    (identifier)
+    (array_type
+      (builtin_type)
+      (array_dimension
+        (integer_literal))
+      (array_dimension
+        (integer_literal))))
+  (type_alias
+    (identifier)
+    (channel_type
+      (builtin_type)
+      (array_dimension
+        (integer_literal)))))
+
+==================
+Structs, enums, impl members, and qualified constants
+==================
+
+struct Point<N: u32> { x: uN[N], y: uN[N] }
+enum Direction : u2 { NORTH = u2:0, EAST = u2:1, SOUTH = u2:2, WEST = u2:3 }
+
+impl Point<u32:8> {
+  const ORIGIN: Self = Point { x: u8:0, y: u8:0 };
+  fn area(self: Self) -> u8 { self.x * self.y }
+}
+
+fn max() -> u32 { u32::MAX }
+
+---
+
+(source_file
+  (struct_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (struct_body
+      (struct_member
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier)))))
+      (struct_member
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier)))))))
+  (enum_definition
+    (identifier)
+    (builtin_type)
+    (enum_member
+      (identifier)
+      (typed_expression
+        (builtin_type)
+        (integer_literal)))
+    (enum_member
+      (identifier)
+      (typed_expression
+        (builtin_type)
+        (integer_literal)))
+    (enum_member
+      (identifier)
+      (typed_expression
+        (builtin_type)
+        (integer_literal)))
+    (enum_member
+      (identifier)
+      (typed_expression
+        (builtin_type)
+        (integer_literal))))
+  (impl_block
+    (type_path
+      (identifier)
+      (parametric_arguments
+        (parametric_argument
+          (typed_expression
+            (builtin_type)
+            (integer_literal)))))
+    (impl_member
+      (constant_definition
+        (identifier)
+        (type_path)
+        (struct_expression
+          (type_path
+            (identifier))
+          (struct_field_initializer
+            (identifier)
+            (typed_expression
+              (builtin_type)
+              (integer_literal)))
+          (struct_field_initializer
+            (identifier)
+            (typed_expression
+              (builtin_type)
+              (integer_literal))))))
+    (impl_member
+      (function_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (type_path)))
+        (builtin_type)
+        (block
+          (binary_expression
+            (field_expression
+              (path_expression)
+              (identifier))
+            (field_expression
+              (path_expression)
+              (identifier)))))))
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (builtin_type)
+    (block
+      (path_expression
+        (builtin_type)
+        (identifier)))))
+
+==================
+Nested typed values and struct update
+==================
+
+fn values<N: u32>(p: Point<N>) {
+  let a = u32[3]:[1, 2, 3];
+  let b = (u8, u16):(u8:1, u16:2);
+  let c = Point<N> { x: uN[N]:0, y: uN[N]:1, ..p };
+  (a, b, c)
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (parameter_list
+      (parameter
+        (identifier)
+        (type_path
+          (identifier)
+          (parametric_arguments
+            (parametric_argument
+              (path_expression
+                (identifier)))))))
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (typed_expression
+          (array_type
+            (builtin_type)
+            (array_dimension
+              (integer_literal)))
+          (array_expression
+            (integer_literal)
+            (integer_literal)
+            (integer_literal))))
+      (let_statement
+        (pattern
+          (identifier))
+        (typed_expression
+          (tuple_type
+            (builtin_type)
+            (builtin_type))
+          (tuple_expression
+            (typed_expression
+              (builtin_type)
+              (integer_literal))
+            (typed_expression
+              (builtin_type)
+              (integer_literal)))))
+      (let_statement
+        (pattern
+          (identifier))
+        (struct_expression
+          (type_path
+            (identifier)
+            (parametric_arguments
+              (parametric_argument
+                (path_expression
+                  (identifier)))))
+          (struct_field_initializer
+            (identifier)
+            (typed_expression
+              (array_type
+                (builtin_type)
+                (array_dimension
+                  (path_expression
+                    (identifier))))
+              (integer_literal)))
+          (struct_field_initializer
+            (identifier)
+            (typed_expression
+              (array_type
+                (builtin_type)
+                (array_dimension
+                  (path_expression
+                    (identifier))))
+              (integer_literal)))
+          (struct_field_initializer
+            (path_expression
+              (identifier)))))
+      (tuple_expression
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))))))

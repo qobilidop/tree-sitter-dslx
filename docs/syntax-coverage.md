@@ -1,0 +1,78 @@
+# DSLX syntax coverage
+
+This ledger traces the supported syntax at XLS revision
+`69f84975c32f3471c113a2115f8d0e344ca4d73b` to grammar rules and focused tests.
+The sources of truth are the pinned XLS scanner, parser, parser tests, maintained
+DSLX files, and language reference, in that order. “Covered” means that the
+construct has an intentional public tree shape and at least one exact-tree
+test; it does not imply semantic validation.
+
+The corpus case names below refer to files in [`test/corpus`](../test/corpus).
+Highlight coverage refers to [`test/highlight/core.x`](../test/highlight/core.x)
+or [`test/highlight/recovery.x`](../test/highlight/recovery.x). Recovery cases
+are exact trees containing intentionally localized `ERROR` or `MISSING` nodes.
+
+## Coverage ledger
+
+| Syntax family | Grammar rules | Positive exact-tree coverage | Recovery / highlight coverage | Status and notes |
+| --- | --- | --- | --- | --- |
+| Module files, whitespace, comments, `.x` and `.dslx` extensions | `source_file`, `line_comment` | `basics: Empty module`; `lexical: Comments, tick identifiers, and labels` | Comment assertion in `core.x` | Covered. DSLX has line comments, not Rust-style block comments. |
+| Module and item attributes | `module_attribute`, `attribute`, `attribute_body`, `attribute_arguments` | `modules: Module attributes and imports`; all cases in `attributes.txt` | Attribute assertions in `core.x` | Covered, including key/value arguments, multiline strings, and backtick fuzz domains. Attribute names are parsed structurally; semantic allow-lists belong to XLS. |
+| Imports, aliases, and use trees | `import_statement`, `import_path`, `use_statement`, `use_tree` | Both cases in `modules.txt` | Keyword assertions in `core.x` | Covered, including dotted imports, `as`, nested use groups, `self`, and trailing commas. Feature gating is semantic. |
+| Visibility, constants, and compile-time assertions | `visibility_modifier`, `constant_definition`, `local_constant_statement`, `const_assert_statement` | `modules: Use tree, visibility, constants, and attributes`; upstream corpus | Keyword and constant assertions in `core.x` | Covered at module, impl, proc, and block scopes where accepted by the official parser. |
+| Functions, parameters, return types, and stubs | `function_definition`, `parameter_list`, `parameter` | `basics: Function`; `functions: Trait stubs and lambda forms` | Function, parameter, and builtin-type assertions in `core.x` | Covered, including trait `self` with an optional explicit `Self` annotation. Stub semicolons occur in builtin/trait sources. |
+| Parametric bindings, defaults, arguments, calls, and references | `parametric_bindings`, `parametric_binding`, `braced_parametric_argument`, `parametric_arguments`, `parametric_argument`, `function_reference`, `call_expression` | `functions: Parametric function with a derived default`; `functions: Generic calls, function references, and macros` | `recovery: Incomplete parametrics preserve the following constant`; parameter highlight in `core.x` | Covered. Identifier-vs-type arguments and `<` comparison ambiguity are retained with narrow GLR conflicts because the official parser uses name bindings. |
+| Lambdas | `lambda_expression`, `lambda_parameter` | `functions: Trait stubs and lambda forms` | Parameter highlighting shares `core.x` query coverage | Covered: empty/nonempty parameter lists, inferred/explicit parameter types, optional return type, block/expression bodies. |
+| Builtin, named, tuple, array, generic, and channel types | `type_annotation`, `builtin_type`, `generic_type`, `type_path`, `tuple_type`, `array_type`, `array_dimension`, `channel_type` | `types: Aliases, tuples, arrays, and channels`; `functions: Trait stubs and lambda forms` | Builtin and named type assertions in `core.x` | Covered, including `bits`, `bool`, `token`, `uN`/`sN`/`xN`, `u1..u64`, `s1..s64`, `Self`, multidimensional arrays, and channel direction. |
+| Type aliases, structs, enums, traits, and impl blocks | `type_alias`, `struct_definition`, `struct_body`, `struct_member`, `enum_definition`, `enum_member`, `trait_definition`, `impl_block` | `types: Structs, enums, impl members, and qualified constants`; `functions: Trait stubs and lambda forms` | Type, property, and enum-constant assertions in `core.x` | Covered, including parametric structs/procs, enum underlying types, associated constants, and feature-gated traits. |
+| Numeric, boolean, character, string, and backtick literals | `integer_literal`, `boolean_literal`, `character_literal`, `string_literal`, `backtick_string_literal` | `expressions: Literal forms`; `lexical: Escaped characters and strings`; `attributes: Fuzz test backtick domain` | Literal assertions in `core.x` | Covered, including binary/hex separators, DSLX escapes, Unicode string escapes, and multiline strings used by `extern_verilog`. Decimal underscores and leading-zero decimals are intentionally rejected to match the scanner. |
+| Typed literals, casts, tuple casts, and struct construction/update | `typed_expression`, `cast_expression`, `struct_expression`, `struct_field_initializer` | `types: Nested typed values and struct update`; `expressions: Literal forms`; `expressions: Operator precedence and casts` | Type/property assertions in `core.x` | Covered, including arbitrary-width types, typed arrays/tuples, nested typed values, shorthand fields, and `..` struct splats. |
+| Arrays, tuples, parenthesized expressions, and ellipsis | `array_expression`, `tuple_expression`, `parenthesized_expression` | `expressions: Literal forms`; `types: Nested typed values and struct update` | Bracket query exercised by all highlight files | Covered, including unit, singleton tuples, trailing commas, empty arrays for recovery, and array `...`. Semantic restrictions such as zero-length arrays remain XLS concerns. |
+| Unary, binary, range, concatenation, and precedence | `unary_expression`, `binary_expression`, `cast_expression` and `PREC` | `expressions: Operator precedence and casts`; `control_flow: Match patterns, alternatives, ranges, and rest` | Operator assertions in `core.x`; incomplete RHS recovery case | Covered for every scanner operator and official precedence tier: range, logical, comparison, bitwise, shift, additive/concatenation, multiplicative, cast, unary, and postfix. |
+| Calls, macros, builtins, and qualified value paths | `path_expression`, `call_expression`, `function_reference`, `macro_invocation`, `macro_identifier`, `argument_list` | `functions: Generic calls, function references, and macros`; `types: Structs, enums, impl members, and qualified constants` | Function and macro assertions in `core.x` | Covered, including `u32::MAX`, `Foo<N>::CONST`, parametric builtin macros, and macro-named builtin stubs. Builtin names are syntax-highlighted without claiming semantic resolution. |
+| Field access, tuple indexes, indexes, bit slices, and width slices | `field_expression`, `tuple_index_expression`, `index_expression`, `slice_expression`, `width_slice_expression` | `expressions: Postfix operations and slices` | Property assertion in `core.x` | Covered for `[i]`, `[:limit]`, `[start:]`, `[start:limit]`, `[start+:Type]`, `.field`, and `.0`. |
+| Blocks, let/const bindings, and expression statements | `block`, `_statement`, `let_statement`, `local_constant_statement`, `expression_statement` | Cases throughout `functions.txt`, `control_flow.txt`, and `procs.txt` | All three recovery cases preserve later/local structure | Covered, including trailing semicolons and a final result expression. Mutable bindings are not accepted by the pinned official parser. |
+| Conditional and const conditional expressions | `if_expression` | `control_flow: If and const if` | Keyword query in `core.x` | Covered, including `else if`, optional `else`, and `const if`. The parser produces a useful tree even where XLS later requires a value. |
+| Match, const match, patterns, alternatives, rest, and pattern ranges | `match_expression`, `match_arm`, `pattern`, `tuple_pattern`, `rest_pattern`, `literal_pattern`, `range_pattern` | `control_flow: Match patterns, alternatives, ranges, and rest`; pinned corpus contains `const match` | Constants/literals query coverage in `core.x` | Covered for nested tuple destructuring, `_`, `..`, qualified/literal patterns, `|` alternatives, and `..`/`..=` ranges. |
+| For, const for, unrolled for, labels, and accumulators | `for_expression`, `labeled_expression` | `control_flow: For and unroll-for expressions`; `lexical: Comments, tick identifiers, and labels`; pinned corpus contains `const for` | Keyword/operator assertions in `core.x` | Covered, including optional accumulator type annotations and required initial accumulator expression. |
+| Procs, proc aliases, members, config/init/next, and impl-style procs | `proc_definition`, `proc_alias`, `proc_item`, `proc_member`, `proc_config`, `proc_init`, `proc_next` | Both cases in `procs.txt` | `recovery: Unclosed proc member type preserves local recovery`; property query covers proc members | Covered for legacy semicolon-separated and impl-style comma-separated forms, nested aliases/constants, explicit state access shapes present in the pinned corpus, and member channel attributes. Separator-style enforcement is semantic. |
+| Channel declarations, channel attributes, spawn, send, and receive calls | `channel_expression`, `channel_type`, `spawn_expression`, ordinary call rules | `procs: Legacy proc, channel declaration, and spawn`; `attributes: Test, quickcheck, and channel attributes` | Function/attribute highlights in `core.x`; invalid old channel syntax is an audited corpus exclusion | Covered. `send`, `recv`, `join`, and related operations are ordinary calls; `chan<T>(name)` and `spawn` have DSLX-specific nodes. |
+| Test, test-proc, quickcheck, fuzz, extern-Verilog, and special builtin syntax | Attribute rules, `macro_invocation`, proc/function definitions | All cases in `attributes.txt`; both cases in `procs.txt` | Attribute/function/string assertions in `core.x` | Covered syntactically. Attribute validation, feature flags, quickcheck domains, and builtin arity/type rules are intentionally delegated to XLS semantic tooling. |
+| Editing recovery | All rules above through Tree-sitter recovery | `recovery.txt` | `recovery.x` has four post-error highlight assertions | Covered for incomplete expressions, missing generic delimiters, and damaged proc/channel syntax. Fuzz and incremental suites provide broader mutation coverage. |
+
+## Lexical and historical boundaries
+
+The following are intentional rather than unknown coverage gaps:
+
+- The scanner recognizes `mut` as a reserved word, but the pinned parser
+  rejects mutable `let`; no mutable-binding production is exposed.
+- `spawn` is an identifier in the official scanner but has contextual syntax in
+  the parser; this grammar gives the complete construct a `spawn_expression`
+  node.
+- A channel value declaration requires `chan<T>(name)`. The obsolete
+  `chan<T>;` fixture is classified as intentionally invalid.
+- Unsized array annotations, leading-zero decimal literals, malformed
+  annotations/dimensions, and unterminated declarations are recovery inputs,
+  not accepted syntax.
+- Semantic feature gates (`traits`, `generics`, use syntax, and channel
+  attributes) are represented syntactically but not enforced. Tree-sitter is
+  complementary to the official XLS frontend, not a type checker.
+
+## Reproduction
+
+Run the focused tree and highlight suites:
+
+```sh
+./dev.sh tree-sitter test
+```
+
+Run the checksummed pinned-corpus gate:
+
+```sh
+./dev.sh npm run test:upstream
+```
+
+The corpus acquisition and exact exclusions are defined by
+[`scripts/fetch-xls-corpus.sh`](../scripts/fetch-xls-corpus.sh),
+[`test/upstream/XLS_REVISION`](../test/upstream/XLS_REVISION), and
+[`test/upstream/exclusions.tsv`](../test/upstream/exclusions.tsv).

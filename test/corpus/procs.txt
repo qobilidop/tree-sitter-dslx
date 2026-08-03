@@ -1,0 +1,282 @@
+==================
+Legacy proc, channel declaration, and spawn
+==================
+
+proc Child<N: u32> {
+  output: chan<uN[N]> out;
+  config(output: chan<uN[N]> out) { (output,) }
+  init { uN[N]:0 }
+  next(state: uN[N]) {
+    let tok = send(join(), output, state);
+    state + uN[N]:1
+  }
+}
+
+#[test_proc]
+proc Network {
+  output: chan<u8> out;
+  config() {
+    let (sender, receiver) = chan<u8>("network");
+    spawn Child<u32:8>(sender);
+    (receiver,)
+  }
+  init { u8:0 }
+  next(state: u8) { state }
+}
+
+---
+
+(source_file
+  (proc_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (proc_item
+      (proc_member
+        (identifier)
+        (channel_type
+          (array_type
+            (builtin_type)
+            (array_dimension
+              (path_expression
+                (identifier)))))))
+    (proc_item
+      (proc_config
+        (parameter_list
+          (parameter
+            (identifier)
+            (channel_type
+              (array_type
+                (builtin_type)
+                (array_dimension
+                  (path_expression
+                    (identifier)))))))
+        (block
+          (tuple_expression
+            (path_expression
+              (identifier))))))
+    (proc_item
+      (proc_init
+        (block
+          (typed_expression
+            (array_type
+              (builtin_type)
+              (array_dimension
+                (path_expression
+                  (identifier))))
+            (integer_literal)))))
+    (proc_item
+      (proc_next
+        (parameter_list
+          (parameter
+            (identifier)
+            (array_type
+              (builtin_type)
+              (array_dimension
+                (path_expression
+                  (identifier))))))
+        (block
+          (let_statement
+            (pattern
+              (identifier))
+            (call_expression
+              (path_expression
+                (identifier))
+              (argument_list
+                (call_expression
+                  (path_expression
+                    (identifier))
+                  (argument_list))
+                (path_expression
+                  (identifier))
+                (path_expression
+                  (identifier)))))
+          (binary_expression
+            (path_expression
+              (identifier))
+            (typed_expression
+              (array_type
+                (builtin_type)
+                (array_dimension
+                  (path_expression
+                    (identifier))))
+              (integer_literal)))))))
+  (proc_definition
+    (attribute
+      (attribute_body
+        (identifier)))
+    (identifier)
+    (proc_item
+      (proc_member
+        (identifier)
+        (channel_type
+          (builtin_type))))
+    (proc_item
+      (proc_config
+        (parameter_list)
+        (block
+          (let_statement
+            (pattern
+              (tuple_pattern
+                (pattern
+                  (identifier))
+                (pattern
+                  (identifier))))
+            (channel_expression
+              (builtin_type)
+              (string_literal)))
+          (expression_statement
+            (spawn_expression
+              (path_expression
+                (identifier))
+              (parametric_arguments
+                (parametric_argument
+                  (typed_expression
+                    (builtin_type)
+                    (integer_literal))))
+              (argument_list
+                (path_expression
+                  (identifier)))))
+          (tuple_expression
+            (path_expression
+              (identifier))))))
+    (proc_item
+      (proc_init
+        (block
+          (typed_expression
+            (builtin_type)
+            (integer_literal)))))
+    (proc_item
+      (proc_next
+        (parameter_list
+          (parameter
+            (identifier)
+            (builtin_type)))
+        (block
+          (path_expression
+            (identifier)))))))
+
+==================
+Impl-style proc and proc alias
+==================
+
+proc Counter<N: u32> { output: chan<uN[N]> out, amount: uN[N], }
+proc ByteCounter = Counter<u32:8>;
+
+impl Counter<u32:8> {
+  fn config(output: chan<u8> out, amount: u8) -> (Self,) { (Self { output, amount },) }
+  fn init() -> u8 { u8:0 }
+  fn next(self: Self, state: u8) -> u8 {
+    let tok = send(join(), self.output, state);
+    state + self.amount
+  }
+}
+
+---
+
+(source_file
+  (proc_definition
+    (identifier)
+    (parametric_bindings
+      (parametric_binding
+        (identifier)
+        (builtin_type)))
+    (proc_item
+      (proc_member
+        (identifier)
+        (channel_type
+          (array_type
+            (builtin_type)
+            (array_dimension
+              (path_expression
+                (identifier)))))))
+    (proc_item
+      (proc_member
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (path_expression
+              (identifier)))))))
+  (proc_alias
+    (identifier)
+    (path_expression
+      (identifier))
+    (parametric_arguments
+      (parametric_argument
+        (typed_expression
+          (builtin_type)
+          (integer_literal)))))
+  (impl_block
+    (type_path
+      (identifier)
+      (parametric_arguments
+        (parametric_argument
+          (typed_expression
+            (builtin_type)
+            (integer_literal)))))
+    (impl_member
+      (function_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (identifier)
+            (channel_type
+              (builtin_type)))
+          (parameter
+            (identifier)
+            (builtin_type)))
+        (tuple_type
+          (type_path))
+        (block
+          (tuple_expression
+            (struct_expression
+              (type_path)
+              (struct_field_initializer
+                (identifier))
+              (struct_field_initializer
+                (identifier)))))))
+    (impl_member
+      (function_definition
+        (identifier)
+        (parameter_list)
+        (builtin_type)
+        (block
+          (typed_expression
+            (builtin_type)
+            (integer_literal)))))
+    (impl_member
+      (function_definition
+        (identifier)
+        (parameter_list
+          (parameter
+            (type_path))
+          (parameter
+            (identifier)
+            (builtin_type)))
+        (builtin_type)
+        (block
+          (let_statement
+            (pattern
+              (identifier))
+            (call_expression
+              (path_expression
+                (identifier))
+              (argument_list
+                (call_expression
+                  (path_expression
+                    (identifier))
+                  (argument_list))
+                (field_expression
+                  (path_expression)
+                  (identifier))
+                (path_expression
+                  (identifier)))))
+          (binary_expression
+            (path_expression
+              (identifier))
+            (field_expression
+              (path_expression)
+              (identifier))))))))

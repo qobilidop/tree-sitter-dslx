@@ -1,0 +1,7 @@
+# Path	Reason
+xls/dslx/tests/errors/bad_annotation.x	Syntax-negative fixture: duplicated colon in a parameter annotation.
+xls/dslx/tests/errors/bad_dim.x	Syntax-negative fixture: invalid plus token as an array dimension.
+xls/dslx/tests/errors/no_radix.x	Scanner-negative fixture: a multi-digit decimal literal has a forbidden leading zero.
+xls/dslx/tests/errors/send_in_func.x	Syntax-negative regression fixture: channel declaration omits the required name expression in parentheses.
+xls/dslx/tests/errors/unsized_array_type.x	Syntax-negative fixture: unsized array annotations and an incomplete call delimiter.
+xls/dslx/tests/errors/unterminated_proc.x	Syntax-negative fixture: the proc body has no closing brace.

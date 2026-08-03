@@ -1,0 +1,230 @@
+==================
+Literal forms
+==================
+
+fn literals() {
+  let a = u8:0xff;
+  let b = sN[8]:-7;
+  let c = '\n';
+  let d = "dslx\u{21}";
+  let e = [u8:1, u8:2, ...];
+  (a, b, c, d, e)
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list)
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (typed_expression
+          (builtin_type)
+          (integer_literal)))
+      (let_statement
+        (pattern
+          (identifier))
+        (typed_expression
+          (array_type
+            (builtin_type)
+            (array_dimension
+              (integer_literal)))
+          (unary_expression
+            (integer_literal))))
+      (let_statement
+        (pattern
+          (identifier))
+        (character_literal))
+      (let_statement
+        (pattern
+          (identifier))
+        (string_literal))
+      (let_statement
+        (pattern
+          (identifier))
+        (array_expression
+          (typed_expression
+            (builtin_type)
+            (integer_literal))
+          (typed_expression
+            (builtin_type)
+            (integer_literal))))
+      (tuple_expression
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))))))
+
+==================
+Operator precedence and casts
+==================
+
+fn operators(a: u32, b: u32, c: u32) -> bool {
+  !((a + b * c << u32:1) & u32:0xff == u32:0) || (a as u64) >= u64:4
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (builtin_type))
+      (parameter
+        (identifier)
+        (builtin_type))
+      (parameter
+        (identifier)
+        (builtin_type)))
+    (builtin_type)
+    (block
+      (binary_expression
+        (unary_expression
+          (parenthesized_expression
+            (binary_expression
+              (binary_expression
+                (parenthesized_expression
+                  (binary_expression
+                    (binary_expression
+                      (path_expression
+                        (identifier))
+                      (binary_expression
+                        (path_expression
+                          (identifier))
+                        (path_expression
+                          (identifier))))
+                    (typed_expression
+                      (builtin_type)
+                      (integer_literal))))
+                (typed_expression
+                  (builtin_type)
+                  (integer_literal)))
+              (typed_expression
+                (builtin_type)
+                (integer_literal)))))
+        (binary_expression
+          (parenthesized_expression
+            (cast_expression
+              (path_expression
+                (identifier))
+              (builtin_type)))
+          (typed_expression
+            (builtin_type)
+            (integer_literal)))))))
+
+==================
+Postfix operations and slices
+==================
+
+fn postfix(x: u32[4], pair: (u32, u32), s: Point<u32:32>) {
+  let a = x[u32:1];
+  let b = x[:u32:2];
+  let c = x[u32:1:];
+  let d = x[u32:1+:u8];
+  let e = pair.0;
+  let f = s.x;
+  (a, b, c, d, e, f)
+}
+
+---
+
+(source_file
+  (function_definition
+    (identifier)
+    (parameter_list
+      (parameter
+        (identifier)
+        (array_type
+          (builtin_type)
+          (array_dimension
+            (integer_literal))))
+      (parameter
+        (identifier)
+        (tuple_type
+          (builtin_type)
+          (builtin_type)))
+      (parameter
+        (identifier)
+        (type_path
+          (identifier)
+          (parametric_arguments
+            (parametric_argument
+              (typed_expression
+                (builtin_type)
+                (integer_literal)))))))
+    (block
+      (let_statement
+        (pattern
+          (identifier))
+        (index_expression
+          (path_expression
+            (identifier))
+          (typed_expression
+            (builtin_type)
+            (integer_literal))))
+      (let_statement
+        (pattern
+          (identifier))
+        (slice_expression
+          (path_expression
+            (identifier))
+          (typed_expression
+            (builtin_type)
+            (integer_literal))))
+      (let_statement
+        (pattern
+          (identifier))
+        (slice_expression
+          (path_expression
+            (identifier))
+          (typed_expression
+            (builtin_type)
+            (integer_literal))))
+      (let_statement
+        (pattern
+          (identifier))
+        (width_slice_expression
+          (path_expression
+            (identifier))
+          (typed_expression
+            (builtin_type)
+            (integer_literal))
+          (builtin_type)))
+      (let_statement
+        (pattern
+          (identifier))
+        (tuple_index_expression
+          (path_expression
+            (identifier))
+          (integer_literal)))
+      (let_statement
+        (pattern
+          (identifier))
+        (field_expression
+          (path_expression
+            (identifier))
+          (identifier)))
+      (tuple_expression
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))
+        (path_expression
+          (identifier))))))
