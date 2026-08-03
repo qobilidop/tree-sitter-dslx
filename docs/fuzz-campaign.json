@@ -1,0 +1,72 @@
+{
+  "completed_at": "2026-08-03T14:11:05.669Z",
+  "repository_commit": "4aaca5b314a4acf99da4aa50529ef7c4fb6297e6",
+  "xls_revision": "69f84975c32f3471c113a2115f8d0e344ca4d73b",
+  "tree_sitter_runtime_version": "0.26.11",
+  "node_version": "v24.18.1",
+  "platform": "linux-arm64",
+  "language_wasm_sha256": "db97e6e08e41efbd4b73c481f2e8e5e32320732f4ad2f26767a8ec17e827307d",
+  "minimum_cpu_seconds": 28800,
+  "worker_count": 4,
+  "aggregate_cpu_seconds": 29996.869,
+  "aggregate_cpu_hours": 8.3325,
+  "aggregate_iterations": 263953696,
+  "aggregate_traces": 32994212,
+  "aggregate_changed_ranges": 457670056,
+  "aggregate_highlighted_mutants": 10558146,
+  "aggregate_error_free_mutants_compared_fresh": 4065700,
+  "seeds": [1597463007, 4251898768, 2611367233, 970835698],
+  "edits_per_trace": [8],
+  "worker_elapsed_seconds": [7500.001, 7500.001, 7500.002, 7500.001],
+  "workers": [
+    {
+      "seed": 1597463007,
+      "iterations": 66225152,
+      "traces": 8278144,
+      "edits_per_trace": 8,
+      "elapsed_seconds": 7500.001,
+      "cpu_seconds": 7499.168,
+      "changed_ranges": 114826335,
+      "highlighted_mutants": 2649006,
+      "error_free_mutants_compared_fresh": 1019146,
+      "result": "pass"
+    },
+    {
+      "seed": 4251898768,
+      "iterations": 65533760,
+      "traces": 8191720,
+      "edits_per_trace": 8,
+      "elapsed_seconds": 7500.001,
+      "cpu_seconds": 7498.933,
+      "changed_ranges": 113627724,
+      "highlighted_mutants": 2621350,
+      "error_free_mutants_compared_fresh": 1010160,
+      "result": "pass"
+    },
+    {
+      "seed": 2611367233,
+      "iterations": 66140792,
+      "traces": 8267599,
+      "edits_per_trace": 8,
+      "elapsed_seconds": 7500.002,
+      "cpu_seconds": 7499.408,
+      "changed_ranges": 114687156,
+      "highlighted_mutants": 2645631,
+      "error_free_mutants_compared_fresh": 1018134,
+      "result": "pass"
+    },
+    {
+      "seed": 970835698,
+      "iterations": 66053992,
+      "traces": 8256749,
+      "edits_per_trace": 8,
+      "elapsed_seconds": 7500.001,
+      "cpu_seconds": 7499.36,
+      "changed_ranges": 114528841,
+      "highlighted_mutants": 2642159,
+      "error_free_mutants_compared_fresh": 1018260,
+      "result": "pass"
+    }
+  ],
+  "result": "pass"
+}

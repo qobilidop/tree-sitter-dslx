@@ -20,6 +20,7 @@ const files = [
   ...markdownFiles(path.join(repoRoot, "docs")),
 ];
 const missing = [];
+const malformedTables = [];
 
 for (const file of files) {
   const markdown = fs.readFileSync(file, "utf8");
@@ -38,6 +39,21 @@ for (const file of files) {
       missing.push(`${path.relative(repoRoot, file)} -> ${target}`);
     }
   }
+
+  let tableSeparatorCount;
+  for (const [index, line] of markdown.split("\n").entries()) {
+    if (!/^\s*\|/.test(line)) {
+      tableSeparatorCount = undefined;
+      continue;
+    }
+    const separatorCount = [...line.matchAll(/(?<!\\)\|/g)].length;
+    tableSeparatorCount ??= separatorCount;
+    if (separatorCount !== tableSeparatorCount) {
+      malformedTables.push(
+        `${path.relative(repoRoot, file)}:${index + 1} has ${separatorCount - 1} columns; expected ${tableSeparatorCount - 1}`,
+      );
+    }
+  }
 }
 
 const coverage = fs.readFileSync(
@@ -49,6 +65,9 @@ if (/\|\s*(?:unknown|todo|tbd)\s*\||\b(?:todo|tbd):/i.test(coverage)) {
 }
 if (missing.length > 0) {
   throw new Error(`Missing local documentation links:\n${missing.join("\n")}`);
+}
+if (malformedTables.length > 0) {
+  throw new Error(`Malformed Markdown tables:\n${malformedTables.join("\n")}`);
 }
 
 console.log(`Documentation checks passed: files=${files.length}`);

@@ -1,8 +1,7 @@
 # Validation report
 
-Report status: local MVP evidence complete except for the fuzz campaign entry
-marked **running** below. GitHub Pages deployment requires repository settings
-and is tracked separately from parser correctness.
+Report status: all MVP evidence gates are complete. The tested playground is
+live through GitHub Pages and is tracked separately from parser correctness.
 
 ## Compatibility baseline
 
@@ -16,28 +15,29 @@ and is tracked separately from parser correctness.
 | Generated parser ABI                | 15                                                                 |
 
 The canonical environment is the digest-pinned Ubuntu 22.04 development image.
-The measurements below were taken in its native arm64 container on an Apple M3
-Max host with 16 CPU cores and 64 GB of memory.
+Local extended evidence uses its native arm64 container on an Apple M3 Max host
+with 16 CPU cores and 64 GB of memory. The same image also passes the extended
+suite natively on a GitHub-hosted Ubuntu x64 runner.
 
 ## Results
 
-| Gate                                    | Result                                                                                                                              |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Exact-tree corpus                       | 26/26 cases pass across 10 language-family files                                                                                    |
-| Highlight query                         | 36/36 assertions pass, including four assertions after errors                                                                       |
-| Public node schema                      | 95 named node types among 164 entries in `src/node-types.json`                                                                      |
-| Pinned XLS discovery                    | 613 candidates; 607 syntax-valid; 6 syntax-negative exclusions                                                                      |
-| Pinned XLS syntax-valid corpus          | 3,224,789 bytes; every file has zero `ERROR` or `MISSING` nodes                                                                     |
-| Whitespace/comment metamorphic variants | 1,821/1,821 pass across all 607 files                                                                                               |
-| Curated incremental equivalence         | 15 edits across small, medium, and large sources; incremental trees equal fresh trees                                               |
-| Full-corpus incremental equivalence     | 1,821 edits across 607 files; each three-edit trace restores the exact source and tree                                              |
-| Official parser positive differential   | 586 accepted files; 21 narrowly classified contextual/semantic/internal exclusions                                                  |
-| Official formatter metamorphic pass     | 568 formatted outputs and 2,493,972 formatted bytes parse cleanly; 18 pinned formatter comment-preservation refusals                |
-| Wasm runtime                            | ABI 15 loads; 34 highlight captures; malformed-source query smoke passes                                                            |
-| Native runtime                          | All 607 files and a prepend/edit fresh-tree comparison pass under ASan and UBSan                                                    |
-| External C consumer                     | Installed runtime and grammar are discovered by pkg-config, linked by an isolated CMake project, and parse a module                 |
-| Playground                              | 10 production assets and four examples pass; a local Chrome headless load reaches `Ready`, highlights source, and renders tree rows |
-| Recorded fuzz campaign                  | **Running:** eight workers × 3,900 seconds; final evidence will replace this row                                                    |
+| Gate                                    | Result                                                                                                                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Exact-tree corpus                       | 26/26 cases pass across 10 language-family files                                                                                      |
+| Highlight query                         | 45/45 assertions pass, including DSLX proc/channel constructs and four assertions after errors                                        |
+| Public node schema                      | 95 named node types among 164 entries in `src/node-types.json`                                                                        |
+| Pinned XLS discovery                    | 613 candidates; 607 syntax-valid; 6 syntax-negative exclusions                                                                        |
+| Pinned XLS syntax-valid corpus          | 3,224,789 bytes; every file has zero `ERROR` or `MISSING` nodes                                                                       |
+| Whitespace/comment metamorphic variants | 1,821/1,821 pass across all 607 files                                                                                                 |
+| Curated incremental equivalence         | 15 edits across small, medium, and large sources; incremental trees equal fresh trees                                                 |
+| Full-corpus incremental equivalence     | 1,821 edits across 607 files; each three-edit trace restores the exact source and tree                                                |
+| Official parser positive differential   | 586 accepted files; 21 narrowly classified contextual/semantic/internal exclusions                                                    |
+| Official formatter metamorphic pass     | 568 formatted outputs and 2,493,972 formatted bytes parse cleanly; 18 pinned formatter comment-preservation refusals                  |
+| Wasm runtime                            | ABI 15 loads; 34 highlight captures; malformed-source query smoke passes                                                              |
+| Native runtime                          | All 607 files and a prepend/edit fresh-tree comparison pass under ASan and UBSan                                                      |
+| External C consumer                     | Isolated CMake consumers discover installed runtime and grammar through pkg-config, link shared and static builds, and parse a module |
+| Playground                              | 10 production assets and four examples pass; the HTTPS Pages deployment serves the tested Wasm parser and static assets               |
+| Recorded fuzz campaign                  | 4/4 workers pass; 8.3325 CPU-hours, 263,953,696 edits, 32,994,212 traces, and 4,065,700 error-free fresh comparisons                  |
 
 ### Corpus classification
 
@@ -77,8 +77,8 @@ malformed input: incremental reuse can choose an equally valid recovery path
 that differs from a fresh recovery parse. Mutation fuzzing follows Tree-sitter's
 own stronger useful invariant for that domain:
 
-- Every arbitrary mutant parses and its highlight query executes without a
-  crash or hang.
+- Every arbitrary mutant parses without a crash or hang; highlight queries
+  execute periodically across arbitrary mutants and on focused recovery trees.
 - Every error-free intermediate mutant equals a fresh parse exactly.
 - Undoing each bounded mutation trace restores the valid source and its exact
   original tree.
@@ -88,18 +88,32 @@ own stronger useful invariant for that domain:
 This distinction prevents a false correctness claim while retaining exact
 equivalence where the tree is a stable consumer interface.
 
+The machine-readable [campaign evidence](fuzz-campaign.json) records the four
+seeds, per-worker results, parser Wasm hash, pinned revisions, and aggregate
+counts. Its 29,996.869 process CPU-seconds exceed the 28,800-second gate. The
+same commit also passed an independent GitHub-hosted campaign with 10,354,576
+edits and 0.9944 aggregate CPU-hours in the linked extended run.
+
+The local wrapper source was edited while its Bash process waited for workers,
+so that process reported a shell parse error after all workers passed and the
+summary was already written. The finalized wrapper passes `bash -n` and
+ShellCheck; the untouched worker logs and CPU gate were then independently
+revalidated with the finalized summarizer. This orchestration error did not
+affect the parser processes or their recorded results.
+
 ## Performance
 
-Seven iterations were measured through the production Wasm runtime; values are
-medians. Guards are intentionally generous (1,000 ms initial and 250 ms
-incremental) and exist to catch pathological ambiguity, not advertise a
+Seven iterations were measured through the production Wasm runtime on the
+GitHub-hosted Ubuntu x64 runner in [extended run 30797512914][extended-run];
+values are medians. Guards are intentionally generous (1,000 ms initial and 250
+ms incremental) and exist to catch pathological ambiguity, not advertise a
 cross-machine ranking.
 
 | Fixture                       |   Bytes | Initial parse | One-character incremental parse |
 | ----------------------------- | ------: | ------------: | ------------------------------: |
-| `xls/dslx/tests/lambda.x`     |   1,309 |      0.257 ms |                        0.041 ms |
-| `xls/examples/bitonic_sort.x` |  13,171 |      2.832 ms |                        1.586 ms |
-| `xls/dslx/stdlib/apfloat.x`   | 217,999 |     28.666 ms |                        0.211 ms |
+| `xls/dslx/tests/lambda.x`     |   1,309 |      0.738 ms |                        0.105 ms |
+| `xls/examples/bitonic_sort.x` |  13,171 |      5.558 ms |                        3.097 ms |
+| `xls/dslx/stdlib/apfloat.x`   | 217,999 |     36.104 ms |                        0.288 ms |
 
 The one-time arm64 build of pinned `dslx_fmt` took 828 seconds and is cached
 outside the interactive image. This cost is why official differential checking
@@ -121,7 +135,7 @@ belongs to the extended suite rather than the browser demo or normal edit loop.
 recovery, highlight, native C, Wasm, upstream corpus, metamorphic, curated
 incremental, deterministic fuzz, external-consumer, and playground checks.
 
-The campaign command defaults to eight 3,900-second workers and requires at
+The campaign command defaults to four 7,500-second workers and requires at
 least 28,800 aggregate process CPU-seconds. Each worker records its seed,
 iterations, changed ranges, highlighted mutants, error-free fresh comparisons,
 wall duration, and process CPU duration.
@@ -137,6 +151,5 @@ wall duration, and process CPU duration.
 - Only C and WebAssembly integration outputs are supported in the MVP.
 - No package is published, and `tags.scm` plus GitHub language onboarding are
   intentionally deferred.
-- The Pages workflow is locally built and browser-tested, but the repository
-  owner must enable GitHub Actions as the Pages source before the first live
-  deployment if it is not already configured.
+
+[extended-run]: https://github.com/qobilidop/tree-sitter-dslx/actions/runs/30797512914

@@ -49,6 +49,8 @@
 
 [
   "as"
+  "chan"
+  "config"
   "const"
   "else"
   "enum"
@@ -58,18 +60,23 @@
   "impl"
   "import"
   "in"
+  "init"
   "let"
   "match"
+  "next"
   "out"
   "proc"
   "self"
   "Self"
+  "spawn"
   "struct"
   "trait"
   "type"
   "unroll_for!"
   "use"
 ] @keyword
+
+(const_assert_statement "const_assert!" @function)
 
 [
   "("

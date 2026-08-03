@@ -13,6 +13,8 @@ marker="${corpus_dir}/.tree-sitter-dslx-revision"
 url="https://github.com/google/xls/archive/${revision}.tar.gz"
 
 mkdir -p "${cache_root}"
+exec 9>"${cache_root}/.xls-source.lock"
+flock 9
 
 archive_is_valid() {
   [[ -f "${archive}" ]] &&
@@ -20,8 +22,15 @@ archive_is_valid() {
 }
 
 if ! archive_is_valid; then
-  rm -f -- "${archive}"
-  curl --fail --location --retry 3 --output "${archive}" "${url}"
+  download="$(mktemp "${archive}.download.XXXXXX")"
+  trap 'rm -f "${download}"' EXIT
+  curl --fail --location --retry 3 --output "${download}" "${url}"
+  if [[ "$(sha256sum "${download}" | awk '{print $1}')" != "${expected_sha256}" ]]; then
+    echo "XLS archive checksum mismatch for ${revision}" >&2
+    exit 1
+  fi
+  mv "${download}" "${archive}"
+  trap - EXIT
 fi
 
 if ! archive_is_valid; then

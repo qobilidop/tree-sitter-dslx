@@ -7,9 +7,9 @@ dslx_campaign_script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly dslx_campaign_script_dir
 dslx_campaign_repo_dir="$(cd "${dslx_campaign_script_dir}/.." && pwd)"
 readonly dslx_campaign_repo_dir
-dslx_campaign_workers="${FUZZ_CAMPAIGN_WORKERS:-8}"
+dslx_campaign_workers="${FUZZ_CAMPAIGN_WORKERS:-4}"
 readonly dslx_campaign_workers
-dslx_campaign_seconds="${FUZZ_CAMPAIGN_SECONDS:-3900}"
+dslx_campaign_seconds="${FUZZ_CAMPAIGN_SECONDS:-7500}"
 readonly dslx_campaign_seconds
 dslx_campaign_edits="${FUZZ_CAMPAIGN_EDITS_PER_TRACE:-8}"
 readonly dslx_campaign_edits
@@ -29,6 +29,8 @@ for dslx_value in \
 done
 
 cd "${dslx_campaign_repo_dir}"
+dslx_campaign_commit="$(git rev-parse HEAD)"
+readonly dslx_campaign_commit
 npm run build:wasm
 
 case "${dslx_campaign_dir}" in
@@ -49,6 +51,13 @@ cleanup_campaign() {
   done
 }
 trap cleanup_campaign INT TERM
+
+printf \
+  'Fuzz campaign started: workers=%s duration=%ss edits_per_trace=%s minimum_cpu=%ss\n' \
+  "${dslx_campaign_workers}" \
+  "${dslx_campaign_seconds}" \
+  "${dslx_campaign_edits}" \
+  "${dslx_campaign_minimum_cpu}" >&2
 
 for ((dslx_worker = 0; dslx_worker < dslx_campaign_workers; dslx_worker += 1)); do
   dslx_seed=$((1597463007 + dslx_worker * 2654435761))
@@ -76,6 +85,7 @@ if (( dslx_campaign_failed != 0 )); then
   exit 1
 fi
 
-node scripts/summarize-fuzz-campaign.mjs \
+FUZZ_CAMPAIGN_REPOSITORY_COMMIT="${dslx_campaign_commit}" \
+  node scripts/summarize-fuzz-campaign.mjs \
   "${dslx_campaign_dir}" "${dslx_campaign_minimum_cpu}" \
   | tee "${dslx_campaign_repo_dir}/build/fuzz-campaign-summary.json"

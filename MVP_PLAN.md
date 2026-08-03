@@ -1,6 +1,6 @@
 # tree-sitter-dslx MVP development plan
 
-Status: proposed
+Status: complete at XLS revision `69f84975c32f3471c113a2115f8d0e344ca4d73b`
 
 This document defines the minimum viable product for an upstream-ready
 Tree-sitter grammar for XLS DSLX. It is a development plan, not a release or
@@ -555,30 +555,30 @@ and evaluate the live parser without installing XLS or `dslx_ls`.
 
 The MVP is complete only when all of the following are true:
 
-- [ ] Every in-scope DSLX reference/parser-test feature is resolved in the
+- [x] Every in-scope DSLX reference/parser-test feature is resolved in the
       syntax coverage ledger.
-- [ ] Generated parser artifacts reproduce exactly from locked inputs.
-- [ ] All exact-tree, recovery, highlight, C, and Wasm tests pass.
-- [ ] Every classified valid file at the pinned XLS revision parses without
+- [x] Generated parser artifacts reproduce exactly from locked inputs.
+- [x] All exact-tree, recovery, highlight, C, and Wasm tests pass.
+- [x] Every classified valid file at the pinned XLS revision parses without
       unexpected `ERROR` or `MISSING` nodes.
-- [ ] Every corpus exclusion is narrow and justified.
-- [ ] Official-parser positive differential and formatting metamorphic checks
+- [x] Every corpus exclusion is narrow and justified.
+- [x] Official-parser positive differential and formatting metamorphic checks
       pass.
-- [ ] Incremental parse trees equal fresh parse trees for the required edit
+- [x] Incremental parse trees equal fresh parse trees for the required edit
       suites.
-- [ ] The pre-upstream fuzz campaign records at least eight aggregate CPU-hours
+- [x] The pre-upstream fuzz campaign records at least eight aggregate CPU-hours
       with no unresolved crash, hang, sanitizer failure, or tree divergence.
-- [ ] Performance checks show no known pathological file or recovery case.
-- [ ] The C interface can be consumed by an external smoke-test project.
-- [ ] The production Wasm artifact is the one exercised by the playground.
-- [ ] A clean machine can build and run required checks through `dev.sh`.
-- [ ] CI uses the same pinned environment and has least-privilege permissions.
-- [ ] The playground is live on GitHub Pages and linked from the README.
-- [ ] The README clearly explains complementarity with `dslx_ls` and
+- [x] Performance checks show no known pathological file or recovery case.
+- [x] The C interface can be consumed by an external smoke-test project.
+- [x] The production Wasm artifact is the one exercised by the playground.
+- [x] A clean machine can build and run required checks through `dev.sh`.
+- [x] CI uses the same pinned environment and has least-privilege permissions.
+- [x] The playground is live on GitHub Pages and linked from the README.
+- [x] The README clearly explains complementarity with `dslx_ls` and
       `dslx-vscode`.
-- [ ] The validation report states evidence, baseline, exclusions, and known
+- [x] The validation report states evidence, baseline, exclusions, and known
       limitations precisely.
-- [ ] No package has been published and no GitHub language-onboarding work has
+- [x] No package has been published and no GitHub language-onboarding work has
       been mixed into the MVP.
 
 ## 14. Upstreaming packet

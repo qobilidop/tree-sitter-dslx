@@ -34,8 +34,9 @@ The current evidence supports this bounded claim:
 > All 607 classified syntax-valid DSLX files in the pinned XLS corpus, totaling
 > 3,224,789 bytes, parse without `ERROR` or `MISSING` nodes. The exact-tree,
 > recovery, highlight, incremental, official-frontend, C, Wasm, sanitizer, and
-> metamorphic suites pass. Narrow oracle exclusions and known limitations are
-> recorded rather than hidden.
+> metamorphic suites pass. A recorded mutation campaign completed 8.3325
+> aggregate CPU-hours without a worker failure. Narrow oracle exclusions and
+> known limitations are recorded rather than hidden.
 
 The [validation report](docs/validation-report.md) gives the commands, counts,
 performance measurements, fuzz evidence, and interpretation of the 21
@@ -101,8 +102,8 @@ The MVP intentionally supports only the portable foundations:
 
 - **C:** generated parser sources, `tree_sitter_dslx()`, a public header,
   CMake installation, and pkg-config metadata. `npm run test:c-consumer`
-  installs the grammar and Tree-sitter runtime into an isolated prefix, then
-  builds a standalone consumer.
+  installs the grammar and Tree-sitter runtime into isolated prefixes, then
+  builds standalone shared- and static-link consumers.
 - **WebAssembly:** a reproducible ABI 15 grammar module tested with
   `web-tree-sitter` and copied into the static playground.
 
@@ -127,9 +128,9 @@ code-navigation onboarding in this phase.
 
 ## Upstreaming status
 
-The MVP is being prepared for an ownership discussion with either the XLS or
-XLSynth GitHub organization. The [upstreaming packet](docs/upstreaming.md)
-summarizes the proposal without assuming which organization should own it.
+The MVP is ready for an ownership discussion with either the XLS or XLSynth
+GitHub organization. The [upstreaming packet](docs/upstreaming.md) summarizes
+the proposal without assuming which organization should own it.
 [Maintenance notes](docs/maintenance.md) describe how the pinned DSLX baseline
 and generated artifacts should evolve.
 

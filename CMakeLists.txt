@@ -10,15 +10,6 @@ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 set(TREE_SITTER_ABI_VERSION 15 CACHE STRING "Tree-sitter ABI version")
 
-find_program(TREE_SITTER_CLI tree-sitter)
-
-add_custom_command(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/src/parser.c"
-                   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/grammar.json"
-                   COMMAND "${TREE_SITTER_CLI}" generate src/grammar.json
-                           --abi=${TREE_SITTER_ABI_VERSION}
-                   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-                   COMMENT "Generating parser.c")
-
 add_library(tree-sitter-dslx src/parser.c)
 target_include_directories(tree-sitter-dslx PRIVATE src)
 set_target_properties(tree-sitter-dslx
@@ -41,7 +32,3 @@ install(TARGETS tree-sitter-dslx
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-
-add_custom_target(ts-test "${TREE_SITTER_CLI}" test
-                  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-                  COMMENT "Running Tree-sitter tests")

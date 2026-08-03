@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import { Language, Parser } from "web-tree-sitter";
+import { Language, Parser, Query } from "web-tree-sitter";
 
 import { repoRoot } from "./lib/dslx-wasm.mjs";
 
@@ -49,6 +49,10 @@ await Parser.init();
 const language = await Language.load(path.join(dist, "tree-sitter-dslx.wasm"));
 const parser = new Parser();
 parser.setLanguage(language);
+const query = new Query(
+  language,
+  fs.readFileSync(path.join(dist, "highlights.scm"), "utf8"),
+);
 const examples = JSON.parse(
   fs.readFileSync(path.join(dist, "examples.json"), "utf8"),
 );
@@ -56,8 +60,13 @@ for (const example of examples) {
   const tree = parser.parse(example.source);
   assert.ok(tree !== null, `Parser cancelled for ${example.id}`);
   assert.equal(tree.rootNode.hasError, false, `Invalid example: ${example.id}`);
+  assert.ok(
+    query.captures(tree.rootNode).length > 0,
+    `No highlights captured for ${example.id}`,
+  );
   tree.delete();
 }
+query.delete();
 parser.delete();
 
 console.log(
