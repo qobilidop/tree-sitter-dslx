@@ -25,7 +25,10 @@ This project is a syntax-layer component, not another DSLX compiler frontend.
 
 The playground intentionally does not invoke `dslx_ls`. Consumers that need
 symbol resolution, types, evaluation, simulation, or code generation should
-use the official XLS tools.
+use the official XLS tools. The [error-tolerance design note]
+explains how the grammar preserves useful structure during incomplete edits,
+what Tree-sitter provides automatically, and which guarantees consumers should
+and should not rely on.
 
 ## Confidence at the pinned baseline
 
@@ -141,6 +144,7 @@ Apache-2.0. See [LICENSE](LICENSE).
 [Tree-sitter]: https://tree-sitter.github.io/tree-sitter/
 [XLS DSLX]: https://google.github.io/xls/dslx_reference/
 [playground]: https://qobilidop.github.io/tree-sitter-dslx/
+[error-tolerance design note]: docs/error-tolerance.md
 [xls-baseline]: https://github.com/google/xls/commit/69f84975c32f3471c113a2115f8d0e344ca4d73b
 [`dslx_ls`]: https://google.github.io/xls/dslx_language_server/
 [`dslx-vscode`]: https://github.com/xlsynth/dslx-vscode
