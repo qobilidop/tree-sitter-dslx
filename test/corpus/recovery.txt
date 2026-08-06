@@ -12,26 +12,26 @@ fn intact() -> u32 { u32:42 }
 
 (source_file
   (function_definition
-    (identifier)
-    (parameter_list
+    name: (identifier)
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type)))
-    (builtin_type)
-    (block
-      (binary_expression
-        (path_expression
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      result: (binary_expression
+        left: (path_expression
           (identifier))
-        (path_expression
+        right: (path_expression
           (MISSING identifier)))))
   (function_definition
-    (identifier)
-    (parameter_list)
-    (builtin_type)
-    (block
-      (typed_expression
-        (builtin_type)
-        (integer_literal)))))
+    name: (identifier)
+    parameters: (parameter_list)
+    return_type: (builtin_type)
+    body: (block
+      result: (typed_expression
+        type: (builtin_type)
+        value: (integer_literal)))))
 
 ==================
 Incomplete parametrics preserve the following constant
@@ -44,25 +44,25 @@ const AFTER = u32:1;
 
 (source_file
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type))
+        name: (identifier)
+        type: (builtin_type))
       (MISSING ">"))
-    (parameter_list
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type)))
-    (builtin_type)
-    (block
-      (path_expression
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      result: (path_expression
         (identifier))))
   (constant_definition
-    (identifier)
-    (typed_expression
-      (builtin_type)
-      (integer_literal))))
+    name: (identifier)
+    value: (typed_expression
+      type: (builtin_type)
+      value: (integer_literal))))
 
 ==================
 Unclosed proc member type preserves local recovery
@@ -77,7 +77,7 @@ proc Broken {
 
 (source_file
   (proc_definition
-    (identifier)
+    name: (identifier)
     (ERROR
       (identifier)
       (ERROR
@@ -85,4 +85,4 @@ proc Broken {
         (identifier)
         (identifier))
       (channel_type
-        (builtin_type)))))
+        payload: (builtin_type)))))

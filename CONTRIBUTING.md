@@ -23,11 +23,13 @@ development image when needed and executes the command directly inside it.
    otherwise non-obvious ambiguity next to the declaration.
 3. Run `./dev.sh npm run generate` and review changes in `src/grammar.json`,
    `src/node-types.json`, and `src/parser.c`.
-4. Update `queries/highlights.scm` and its assertions when a public node affects
-   highlighting.
-5. Update `docs/syntax-coverage.md` when support, test locations, or a known
+4. Update the affected files in `queries/` and their highlight, tag, or local
+   query fixtures when a public node changes editor-facing behavior.
+5. Run `./dev.sh npm run lint:schema`; every public named node and field with a
+   named target must remain represented in exact corpus CSTs.
+6. Update `docs/syntax-coverage.md` when support, test locations, or a known
    limitation changes.
-6. Run `./dev.sh npm run verify` before proposing the change.
+7. Run `./dev.sh npm run verify` before proposing the change.
 
 Treat named node types and fields as a public schema. A tree-shape change can be
 correct, but it should be intentional, focused, and called out for downstream
@@ -60,8 +62,8 @@ and validation rejects stale exclusions.
 ## Scope
 
 Before the upstream ownership decision, avoid adding package publication,
-additional language bindings, `tags.scm`, GitHub language onboarding, or editor
-integration without an agreed consumer. These may be valuable follow-up work,
-but they should not obscure grammar correctness or maintenance responsibility.
+additional language bindings, GitHub language onboarding, or editor integration
+without an agreed consumer. Query improvements must include executable fixtures
+and should not obscure grammar correctness or maintenance responsibility.
 
 All contributions are licensed under Apache-2.0.

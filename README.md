@@ -36,8 +36,9 @@ The current evidence supports this bounded claim:
 
 > All 607 classified syntax-valid DSLX files in the pinned XLS corpus, totaling
 > 3,224,789 bytes, parse without `ERROR` or `MISSING` nodes. The exact-tree,
-> recovery, highlight, incremental, official-frontend, C, Wasm, sanitizer, and
-> metamorphic suites pass. A recorded mutation campaign completed 8.3325
+> recovery, highlight, tag, local-variable, incremental, official-frontend, C,
+> Wasm, sanitizer, and metamorphic suites pass. The exact CST corpus represents
+> every public named node and every named-target field. A recorded mutation campaign completed 8.3325
 > aggregate CPU-hours without a worker failure. Narrow oracle exclusions and
 > known limitations are recorded rather than hidden.
 
@@ -81,6 +82,8 @@ host-side static file server.
 
 ```sh
 ./dev.sh npm test                       # exact trees, recovery, highlights
+./dev.sh npm run lint:schema            # public node/field CST coverage
+./dev.sh npm run test:queries           # tags and local-variable contracts
 ./dev.sh npm run test:upstream          # all classified XLS source files
 ./dev.sh npm run test:incremental       # curated realistic edit traces
 ./dev.sh npm run test:incremental:full  # three edits across all 607 files
@@ -88,6 +91,7 @@ host-side static file server.
 ./dev.sh npm run test:sanitizers        # native ASan and UBSan corpus pass
 ./dev.sh npm run test:official          # heavy pinned dslx_fmt differential
 ./dev.sh npm run benchmark              # small, medium, and large fixtures
+./dev.sh npm run canary:xls-main         # non-blocking latest-language drift report
 ```
 
 The official-frontend command performs a one-time, cached build of the smallest
@@ -101,7 +105,7 @@ workflow.
 
 ## Integration outputs
 
-The MVP intentionally supports only the portable foundations:
+The project supports these portable foundations:
 
 - **C:** generated parser sources, `tree_sitter_dslx()`, a public header,
   CMake installation, and pkg-config metadata. `npm run test:c-consumer`
@@ -109,6 +113,8 @@ The MVP intentionally supports only the portable foundations:
   builds standalone shared- and static-link consumers.
 - **WebAssembly:** a reproducible ABI 15 grammar module tested with
   `web-tree-sitter` and copied into the static playground.
+- **Queries:** tested highlighting, code-navigation tags, and local-variable
+  scopes/definitions/references for Tree-sitter hosts.
 
 Node.js is a pinned development tool; this repository does not expose a native
 Node binding. Rust, Python, Go, Swift, Bazel/C++, and package-registry releases
@@ -118,13 +124,15 @@ are deferred until upstream ownership and consumer needs are clear.
 
 - `grammar.js` defines the DSLX-native grammar and its documented conflicts.
 - `src/` contains generated, reviewable C parser artifacts.
-- `queries/highlights.scm` is the sole required MVP query; there is no
-  `tags.scm` yet.
+- `queries/` contains executable highlighting, tag, and local-variable
+  contracts.
 - `test/corpus/` holds focused exact-tree and recovery tests.
+- `test/highlight/`, `test/tags/`, and `test/query/` hold query fixtures.
 - `test/upstream/` pins and classifies XLS and official-oracle inputs.
 - `scripts/` contains reproducible validation and build entry points.
 - `playground/` is framework-free static source; `dist/` is generated.
-- `.github/workflows/pages.yml` builds and deploys only the playground.
+- `.github/workflows/` runs canonical verification, extended drift/fuzz checks,
+  cross-platform CMake builds, and the Pages deployment.
 
 The project does not publish packages and does not attempt GitHub language or
 code-navigation onboarding in this phase.

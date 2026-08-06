@@ -10,42 +10,42 @@ fn width<N: u32, M: u32 = {N + u32:1}>(x: uN[N]) -> uN[M] {
 
 (source_file
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type))
+        name: (identifier)
+        type: (builtin_type))
       (parametric_binding
-        (identifier)
-        (builtin_type)
-        (braced_parametric_argument
-          (binary_expression
-            (path_expression
+        name: (identifier)
+        type: (builtin_type)
+        default: (braced_parametric_argument
+          value: (binary_expression
+            left: (path_expression
               (identifier))
-            (typed_expression
-              (builtin_type)
-              (integer_literal))))))
-    (parameter_list
+            right: (typed_expression
+              type: (builtin_type)
+              value: (integer_literal))))))
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier))))))
-    (array_type
-      (builtin_type)
-      (array_dimension
-        (path_expression
+    return_type: (array_type
+      element: (builtin_type)
+      dimension: (array_dimension
+        size: (path_expression
           (identifier))))
-    (block
-      (cast_expression
-        (path_expression
+    body: (block
+      result: (cast_expression
+        value: (path_expression
           (identifier))
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier))))))))
 
 ==================
@@ -63,71 +63,71 @@ fn apply<N: u32>(x: uN[N]) -> uN[N] {
 
 (source_file
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type)))
-    (parameter_list
+        name: (identifier)
+        type: (builtin_type)))
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier))))))
-    (array_type
-      (builtin_type)
-      (array_dimension
-        (path_expression
+    return_type: (array_type
+      element: (builtin_type)
+      dimension: (array_dimension
+        size: (path_expression
           (identifier))))
-    (block
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (call_expression
-          (function_reference
-            (path_expression
+        value: (call_expression
+          function: (function_reference
+            function: (path_expression
               (identifier))
-            (parametric_arguments
+            parametrics: (parametric_arguments
               (parametric_argument
                 (path_expression
                   (identifier)))))
-          (argument_list
+          arguments: (argument_list
             (path_expression
               (identifier)))))
       (expression_statement
         (call_expression
-          (path_expression
+          function: (path_expression
             (identifier))
-          (argument_list
+          arguments: (argument_list
             (path_expression
               (identifier))
             (function_reference
-              (path_expression
+              function: (path_expression
                 (identifier))
-              (parametric_arguments
+              parametrics: (parametric_arguments
                 (parametric_argument
                   (path_expression
                     (identifier))))))))
       (expression_statement
         (call_expression
-          (path_expression
+          function: (path_expression
             (identifier))
-          (argument_list
+          arguments: (argument_list
             (path_expression
               (identifier))
             (macro_invocation
-              (macro_identifier)
-              (parametric_arguments
+              macro: (macro_identifier)
+              parametrics: (parametric_arguments
                 (parametric_argument
                   (array_type
-                    (builtin_type)
-                    (array_dimension
-                      (path_expression
+                    element: (builtin_type)
+                    dimension: (array_dimension
+                      size: (path_expression
                         (identifier))))))
-              (argument_list)))))
-      (path_expression
+              arguments: (argument_list)))))
+      result: (path_expression
         (identifier)))))
 
 ==================
@@ -152,72 +152,72 @@ fn lambdas() {
 (source_file
   (module_attribute
     (attribute_body
-      (identifier)
-      (attribute_arguments
+      name: (identifier)
+      arguments: (attribute_arguments
         (attribute_argument
           (attribute_value
             (identifier))))))
   (trait_definition
-    (identifier)
+    name: (identifier)
     (trait_member
       (function_definition
-        (identifier)
-        (parameter_list
+        name: (identifier)
+        parameters: (parameter_list
           (parameter))
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (call_expression
-              (function_reference
-                (path_expression
+        return_type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (call_expression
+              function: (function_reference
+                function: (path_expression
                   (identifier))
-                (parametric_arguments
+                parametrics: (parametric_arguments
                   (parametric_argument
                     (path_expression))))
-              (argument_list))))))
+              arguments: (argument_list))))))
     (trait_member
       (function_definition
-        (identifier)
-        (parameter_list
+        name: (identifier)
+        parameters: (parameter_list
           (parameter
-            (type_path))
+            type: (type_path))
           (parameter
-            (identifier)
-            (type_path)))
-        (type_path))))
+            name: (identifier)
+            type: (type_path)))
+        return_type: (type_path))))
   (function_definition
-    (identifier)
-    (parameter_list)
-    (block
+    name: (identifier)
+    parameters: (parameter_list)
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (lambda_expression
+        value: (lambda_expression
           (lambda_parameter
-            (identifier)
-            (builtin_type))
-          (block
-            (binary_expression
-              (path_expression
+            name: (identifier)
+            type: (builtin_type))
+          body: (block
+            result: (binary_expression
+              left: (path_expression
                 (identifier))
-              (typed_expression
-                (builtin_type)
-                (integer_literal))))))
+              right: (typed_expression
+                type: (builtin_type)
+                value: (integer_literal))))))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (lambda_expression
-          (typed_expression
-            (builtin_type)
-            (integer_literal))))
+        value: (lambda_expression
+          body: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (lambda_expression
+        value: (lambda_expression
           (lambda_parameter
-            (identifier))
-          (builtin_type)
-          (block
-            (path_expression
+            name: (identifier))
+          return_type: (builtin_type)
+          body: (block
+            result: (path_expression
               (identifier)))))
-      (tuple_expression))))
+      result: (tuple_expression))))

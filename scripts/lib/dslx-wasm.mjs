@@ -11,7 +11,6 @@ const repoRoot = path.resolve(
   "../..",
 );
 const languageWasm = path.join(repoRoot, "build/tree-sitter-dslx.wasm");
-const highlightsQuery = path.join(repoRoot, "queries/highlights.scm");
 
 let initialization;
 let language;
@@ -33,9 +32,13 @@ export async function createDslxParser() {
 }
 
 export async function createHighlightsQuery() {
+  return createDslxQuery("queries/highlights.scm");
+}
+
+export async function createDslxQuery(relativePath) {
   return new Query(
     await loadDslxLanguage(),
-    fs.readFileSync(highlightsQuery, "utf8"),
+    fs.readFileSync(path.join(repoRoot, relativePath), "utf8"),
   );
 }
 
@@ -125,8 +128,8 @@ export function countRecoveryNodes(rootNode) {
     if (node.isError || node.isMissing) {
       count += 1;
     }
-    for (let index = 0; index < node.namedChildCount; index += 1) {
-      const child = node.namedChild(index);
+    for (let index = 0; index < node.childCount; index += 1) {
+      const child = node.child(index);
       if (child !== null) {
         pending.push(child);
       }

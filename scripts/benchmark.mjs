@@ -16,6 +16,9 @@ const revision = fs
   .readFileSync(path.join(repoRoot, "test/upstream/XLS_REVISION"), "utf8")
   .trim();
 const corpusRoot = path.join(repoRoot, ".cache/upstream", `xls-${revision}`);
+const budgets = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, "test/benchmark-budgets.json"), "utf8"),
+);
 const fixtures = [
   ["small", "xls/dslx/tests/lambda.x"],
   ["medium", "xls/examples/bitonic_sort.x"],
@@ -23,6 +26,37 @@ const fixtures = [
 ];
 const parser = await createDslxParser();
 const results = [];
+const violations = [];
+
+const parserSource = fs.readFileSync(
+  path.join(repoRoot, "src/parser.c"),
+  "utf8",
+);
+function parserConstant(name) {
+  const match = parserSource.match(
+    new RegExp(`^#define ${name} (\\d+)$`, "mu"),
+  );
+  if (match === null)
+    throw new Error(`Could not read ${name} from src/parser.c`);
+  return Number(match[1]);
+}
+
+const artifacts = {
+  state_count: parserConstant("STATE_COUNT"),
+  large_state_count: parserConstant("LARGE_STATE_COUNT"),
+  parser_c_bytes: fs.statSync(path.join(repoRoot, "src/parser.c")).size,
+  wasm_bytes: fs.statSync(path.join(repoRoot, "build/tree-sitter-dslx.wasm"))
+    .size,
+};
+
+for (const [metric, maximum] of Object.entries(budgets.parser_artifacts)) {
+  const observedMetric = metric.replace(/_max$/u, "");
+  if (artifacts[observedMetric] > maximum) {
+    violations.push(
+      `${observedMetric}=${artifacts[observedMetric]} exceeds ${maximum}`,
+    );
+  }
+}
 
 function median(values) {
   const sorted = [...values].sort((left, right) => left - right);
@@ -61,8 +95,18 @@ for (const [size, relativePath] of fixtures) {
 
   const initialMs = median(initialTimes);
   const incrementalMs = median(incrementalTimes);
-  if (initialMs > 1000 || incrementalMs > 250) {
-    throw new Error(`Performance guard exceeded for ${relativePath}`);
+  const fixtureBudget = budgets.fixtures[size];
+  if (initialMs > fixtureBudget.initial_ms_max) {
+    violations.push(
+      `${size} initial=${initialMs.toFixed(3)}ms exceeds ` +
+        `${fixtureBudget.initial_ms_max}ms`,
+    );
+  }
+  if (incrementalMs > fixtureBudget.incremental_ms_max) {
+    violations.push(
+      `${size} incremental=${incrementalMs.toFixed(3)}ms exceeds ` +
+        `${fixtureBudget.incremental_ms_max}ms`,
+    );
   }
   results.push({
     size,
@@ -70,8 +114,30 @@ for (const [size, relativePath] of fixtures) {
     bytes: Buffer.byteLength(source),
     initial_ms_median: Number(initialMs.toFixed(3)),
     incremental_ms_median: Number(incrementalMs.toFixed(3)),
+    budget: fixtureBudget,
   });
 }
 
 parser.delete();
-console.log(JSON.stringify({ revision, iterations: 7, results }, null, 2));
+const report = {
+  schema_version: 1,
+  generated_at: new Date().toISOString(),
+  revision,
+  iterations: 7,
+  artifacts,
+  artifact_budgets: budgets.parser_artifacts,
+  results,
+  violations,
+};
+fs.mkdirSync(path.join(repoRoot, "build"), { recursive: true });
+fs.writeFileSync(
+  path.join(repoRoot, "build/benchmark.json"),
+  `${JSON.stringify(report, null, 2)}\n`,
+);
+console.log(JSON.stringify(report, null, 2));
+
+if (violations.length > 0) {
+  throw new Error(
+    `Performance budgets exceeded:\n- ${violations.join("\n- ")}`,
+  );
+}

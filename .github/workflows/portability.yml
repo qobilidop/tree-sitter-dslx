@@ -1,0 +1,49 @@
+name: Portability
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cmake:
+    name: ${{ matrix.os }} / shared=${{ matrix.shared }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-14, windows-2022]
+        shared: ["ON", "OFF"]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build/portable
+          -DBUILD_SHARED_LIBS=${{ matrix.shared }}
+          -DBUILD_TESTING=ON
+
+      - name: Build
+        run: cmake --build build/portable --config Release
+
+      - name: Run smoke test
+        run: >-
+          ctest --test-dir build/portable
+          --build-config Release
+          --output-on-failure
+
+      - name: Verify installation
+        run: >-
+          cmake --install build/portable
+          --config Release
+          --prefix "${{ runner.temp }}/tree-sitter-dslx"

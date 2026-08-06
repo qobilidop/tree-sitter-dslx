@@ -6,7 +6,9 @@
       "scope": "source.dslx",
       "path": ".",
       "file-types": ["x", "dslx"],
-      "highlights": ["queries/highlights.scm"]
+      "highlights": ["queries/highlights.scm"],
+      "locals": ["queries/locals.scm"],
+      "tags": ["queries/tags.scm"]
     }
   ],
   "metadata": {

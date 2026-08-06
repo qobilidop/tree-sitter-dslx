@@ -15,44 +15,44 @@ fn literals() {
 
 (source_file
   (function_definition
-    (identifier)
-    (parameter_list)
-    (block
+    name: (identifier)
+    parameters: (parameter_list)
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (typed_expression
-          (builtin_type)
-          (integer_literal)))
+        value: (typed_expression
+          type: (builtin_type)
+          value: (integer_literal)))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (typed_expression
-          (array_type
-            (builtin_type)
-            (array_dimension
-              (integer_literal)))
-          (unary_expression
+        value: (typed_expression
+          type: (array_type
+            element: (builtin_type)
+            dimension: (array_dimension
+              size: (integer_literal)))
+          value: (unary_expression
             (integer_literal))))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (character_literal))
+        value: (character_literal))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (string_literal))
+        value: (string_literal))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (array_expression
+        value: (array_expression
           (typed_expression
-            (builtin_type)
-            (integer_literal))
+            type: (builtin_type)
+            value: (integer_literal))
           (typed_expression
-            (builtin_type)
-            (integer_literal))))
-      (tuple_expression
+            type: (builtin_type)
+            value: (integer_literal))))
+      result: (tuple_expression
         (path_expression
           (identifier))
         (path_expression
@@ -76,52 +76,52 @@ fn operators(a: u32, b: u32, c: u32) -> bool {
 
 (source_file
   (function_definition
-    (identifier)
-    (parameter_list
+    name: (identifier)
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type))
+        name: (identifier)
+        type: (builtin_type))
       (parameter
-        (identifier)
-        (builtin_type))
+        name: (identifier)
+        type: (builtin_type))
       (parameter
-        (identifier)
-        (builtin_type)))
-    (builtin_type)
-    (block
-      (binary_expression
-        (unary_expression
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      result: (binary_expression
+        left: (unary_expression
           (parenthesized_expression
             (binary_expression
-              (binary_expression
-                (parenthesized_expression
+              left: (binary_expression
+                left: (parenthesized_expression
                   (binary_expression
-                    (binary_expression
-                      (path_expression
+                    left: (binary_expression
+                      left: (path_expression
                         (identifier))
-                      (binary_expression
-                        (path_expression
+                      right: (binary_expression
+                        left: (path_expression
                           (identifier))
-                        (path_expression
+                        right: (path_expression
                           (identifier))))
-                    (typed_expression
-                      (builtin_type)
-                      (integer_literal))))
-                (typed_expression
-                  (builtin_type)
-                  (integer_literal)))
-              (typed_expression
-                (builtin_type)
-                (integer_literal)))))
-        (binary_expression
-          (parenthesized_expression
+                    right: (typed_expression
+                      type: (builtin_type)
+                      value: (integer_literal))))
+                right: (typed_expression
+                  type: (builtin_type)
+                  value: (integer_literal)))
+              right: (typed_expression
+                type: (builtin_type)
+                value: (integer_literal)))))
+        right: (binary_expression
+          left: (parenthesized_expression
             (cast_expression
-              (path_expression
+              value: (path_expression
                 (identifier))
-              (builtin_type)))
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))))))
+              type: (builtin_type)))
+          right: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))))))
 
 ==================
 Postfix operations and slices
@@ -141,81 +141,81 @@ fn postfix(x: u32[4], pair: (u32, u32), s: Point<u32:32>) {
 
 (source_file
   (function_definition
-    (identifier)
-    (parameter_list
+    name: (identifier)
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (integer_literal))))
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (integer_literal))))
       (parameter
-        (identifier)
-        (tuple_type
+        name: (identifier)
+        type: (tuple_type
           (builtin_type)
           (builtin_type)))
       (parameter
-        (identifier)
-        (type_path
+        name: (identifier)
+        type: (type_path
           (identifier)
-          (parametric_arguments
+          arguments: (parametric_arguments
             (parametric_argument
               (typed_expression
-                (builtin_type)
-                (integer_literal)))))))
-    (block
+                type: (builtin_type)
+                value: (integer_literal)))))))
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (index_expression
-          (path_expression
+        value: (index_expression
+          value: (path_expression
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal))))
+          index: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (slice_expression
-          (path_expression
+        value: (slice_expression
+          value: (path_expression
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal))))
+          limit: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (slice_expression
-          (path_expression
+        value: (slice_expression
+          value: (path_expression
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal))))
+          start: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (width_slice_expression
-          (path_expression
+        value: (width_slice_expression
+          value: (path_expression
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal))
-          (builtin_type)))
+          start: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))
+          width: (builtin_type)))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (tuple_index_expression
-          (path_expression
+        value: (tuple_index_expression
+          value: (path_expression
             (identifier))
-          (integer_literal)))
+          index: (integer_literal)))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (field_expression
-          (path_expression
+        value: (field_expression
+          value: (path_expression
             (identifier))
-          (identifier)))
-      (tuple_expression
+          field: (identifier)))
+      result: (tuple_expression
         (path_expression
           (identifier))
         (path_expression

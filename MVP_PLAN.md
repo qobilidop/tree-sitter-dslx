@@ -2,6 +2,10 @@
 
 Status: complete at XLS revision `69f84975c32f3471c113a2115f8d0e344ca4d73b`
 
+This records the original MVP scope. The repository has since added substantive
+tag/local queries, an XLS `main` drift canary, performance budgets, and a
+cross-platform CMake matrix without changing the pinned compatibility claim.
+
 This document defines the minimum viable product for an upstream-ready
 Tree-sitter grammar for XLS DSLX. It is a development plan, not a release or
 package-publication plan.
@@ -402,8 +406,8 @@ traces, sanitizers, performance measurements, and recorded fuzz campaigns.
 Failures are actionable; the pinned compatibility baseline must not move
 automatically.
 
-An optional non-blocking canary may later test the newest XLS `main` revision
-to detect language drift early.
+A non-blocking scheduled canary tests the newest XLS `main` revision to detect
+language drift early; its report never replaces the pinned compatibility gate.
 
 ### 9.3 Supply-chain and publication policy
 
@@ -617,12 +621,12 @@ on ownership and compatibility policy.
 
 - Package publishing and release automation.
 - Rust, Node, Python, Go, Swift, or upstream-specific Bazel bindings.
-- `tags.scm` and a separate GitHub/Linguist/code-navigation effort.
+- GitHub/Linguist onboarding (the standalone `tags.scm` contract is complete).
 - Optional Tree-sitter integration in `dslx-vscode` or other editors.
 - Additional standardized or editor-specific queries when a consumer requires
   them.
-- Automated compatibility canaries and multi-version DSLX support if real users
-  need them.
+- Multi-version DSLX support if real users need it (the latest-main canary is
+  complete).
 
 ## 17. Reference projects and documentation
 

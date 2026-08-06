@@ -13,6 +13,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  canary:
+    name: XLS main compatibility canary
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Install locked dependencies
+        run: ./dev.sh npm ci
+
+      - name: Parse the current XLS main corpus
+        run: ./dev.sh npm run canary:xls-main
+
+      - name: Add canary results to the run summary
+        run: cat build/xls-main-canary/summary.md >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Retain canary evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: xls-main-canary-${{ github.run_id }}
+          path: build/xls-main-canary
+          if-no-files-found: error
+
   validation:
     name: Official frontend and native runtime
     runs-on: ubuntu-24.04
@@ -35,6 +59,14 @@ jobs:
 
       - name: Measure parser performance
         run: ./dev.sh npm run benchmark
+
+      - name: Retain benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: benchmark-${{ github.run_id }}
+          path: build/benchmark.json
+          if-no-files-found: error
 
       - name: Run deeper Tree-sitter corpus fuzzing
         run: ./dev.sh tree-sitter fuzz --iterations 500 --edits 12

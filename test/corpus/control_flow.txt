@@ -14,67 +14,67 @@ fn choose_const<N: u32>() -> u32 {
 
 (source_file
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type)))
-    (parameter_list
+        name: (identifier)
+        type: (builtin_type)))
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type)))
-    (builtin_type)
-    (block
-      (if_expression
-        (binary_expression
-          (path_expression
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      result: (if_expression
+        condition: (binary_expression
+          left: (path_expression
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))
-        (block
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))
-        (if_expression
-          (binary_expression
-            (path_expression
+          right: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))
+        consequence: (block
+          result: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))
+        alternative: (if_expression
+          condition: (binary_expression
+            left: (path_expression
               (identifier))
-            (typed_expression
-              (builtin_type)
-              (integer_literal)))
-          (block
-            (typed_expression
-              (builtin_type)
-              (integer_literal)))
-          (block
-            (typed_expression
-              (builtin_type)
-              (integer_literal)))))))
+            right: (typed_expression
+              type: (builtin_type)
+              value: (integer_literal)))
+          consequence: (block
+            result: (typed_expression
+              type: (builtin_type)
+              value: (integer_literal)))
+          alternative: (block
+            result: (typed_expression
+              type: (builtin_type)
+              value: (integer_literal)))))))
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type)))
-    (parameter_list)
-    (builtin_type)
-    (block
-      (if_expression
-        (binary_expression
-          (path_expression
+        name: (identifier)
+        type: (builtin_type)))
+    parameters: (parameter_list)
+    return_type: (builtin_type)
+    body: (block
+      result: (if_expression
+        condition: (binary_expression
+          left: (path_expression
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))
-        (block
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))
-        (block
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))))))
+          right: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))
+        consequence: (block
+          result: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))
+        alternative: (block
+          result: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))))))
 
 ==================
 Match patterns, alternatives, ranges, and rest
@@ -93,63 +93,63 @@ fn classify(x: u8, pair: (u8, u8)) -> u8 {
 
 (source_file
   (function_definition
-    (identifier)
-    (parameter_list
+    name: (identifier)
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type))
+        name: (identifier)
+        type: (builtin_type))
       (parameter
-        (identifier)
-        (tuple_type
+        name: (identifier)
+        type: (tuple_type
           (builtin_type)
           (builtin_type))))
-    (builtin_type)
-    (block
+    return_type: (builtin_type)
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (tuple_pattern
             (pattern
               (identifier))
             (pattern
               (identifier))))
-        (path_expression
+        value: (path_expression
           (identifier)))
-      (match_expression
-        (path_expression
+      result: (match_expression
+        value: (path_expression
           (identifier))
         (match_arm
-          (pattern
+          pattern: (pattern
             (literal_pattern
               (typed_expression
-                (builtin_type)
-                (integer_literal))))
-          (pattern
+                type: (builtin_type)
+                value: (integer_literal))))
+          alternative_pattern: (pattern
             (literal_pattern
               (typed_expression
-                (builtin_type)
-                (integer_literal))))
-          (path_expression
+                type: (builtin_type)
+                value: (integer_literal))))
+          value: (path_expression
             (identifier)))
         (match_arm
-          (pattern
+          pattern: (pattern
             (range_pattern
-              (literal_pattern
+              start: (literal_pattern
                 (typed_expression
-                  (builtin_type)
-                  (integer_literal)))
-              (literal_pattern
+                  type: (builtin_type)
+                  value: (integer_literal)))
+              end: (literal_pattern
                 (typed_expression
-                  (builtin_type)
-                  (integer_literal)))))
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))
+                  type: (builtin_type)
+                  value: (integer_literal)))))
+          value: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))
         (match_arm
-          (pattern
+          pattern: (pattern
             (identifier))
-          (typed_expression
-            (builtin_type)
-            (integer_literal)))))))
+          value: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal)))))))
 
 ==================
 For and unroll-for expressions
@@ -166,73 +166,73 @@ fn loops<N: u32>(xs: u32[N]) -> u32 {
 
 (source_file
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type)))
-    (parameter_list
+        name: (identifier)
+        type: (builtin_type)))
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier))))))
-    (builtin_type)
-    (block
+    return_type: (builtin_type)
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (for_expression
-          (pattern
+        value: (for_expression
+          pattern: (pattern
             (tuple_pattern
               (pattern
                 (identifier))
               (pattern
                 (identifier))))
-          (tuple_type
+          type: (tuple_type
             (builtin_type)
             (builtin_type))
-          (binary_expression
-            (typed_expression
-              (builtin_type)
-              (integer_literal))
-            (path_expression
+          iterable: (binary_expression
+            left: (typed_expression
+              type: (builtin_type)
+              value: (integer_literal))
+            right: (path_expression
               (identifier)))
-          (block
-            (binary_expression
-              (path_expression
+          body: (block
+            result: (binary_expression
+              left: (path_expression
                 (identifier))
-              (index_expression
-                (path_expression
+              right: (index_expression
+                value: (path_expression
                   (identifier))
-                (path_expression
+                index: (path_expression
                   (identifier)))))
-          (typed_expression
-            (builtin_type)
-            (integer_literal))))
-      (for_expression
-        (pattern
+          initial_value: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))))
+      result: (for_expression
+        pattern: (pattern
           (tuple_pattern
             (pattern
               (identifier))
             (pattern
               (identifier))))
-        (binary_expression
-          (typed_expression
-            (builtin_type)
-            (integer_literal))
-          (path_expression
+        iterable: (binary_expression
+          left: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))
+          right: (path_expression
             (identifier)))
-        (block
-          (binary_expression
-            (path_expression
+        body: (block
+          result: (binary_expression
+            left: (path_expression
               (identifier))
-            (index_expression
-              (path_expression
+            right: (index_expression
+              value: (path_expression
                 (identifier))
-              (path_expression
+              index: (path_expression
                 (identifier)))))
-        (path_expression
+        initial_value: (path_expression
           (identifier))))))

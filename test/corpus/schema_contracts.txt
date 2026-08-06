@@ -1,0 +1,91 @@
+==================
+Generic types and compile-time block statements
+==================
+
+#![feature(generics)]
+fn checked<T: type>(x: T) -> T {
+  const LOCAL: u32 = u32:1;
+  const_assert!(LOCAL == u32:1);
+  x
+}
+
+---
+
+(source_file
+  (module_attribute
+    (attribute_body
+      name: (identifier)
+      arguments: (attribute_arguments
+        (attribute_argument
+          (attribute_value
+            (identifier))))))
+  (function_definition
+    name: (identifier)
+    parametrics: (parametric_bindings
+      (parametric_binding
+        name: (identifier)
+        type: (generic_type)))
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (type_path
+          (identifier))))
+    return_type: (type_path
+      (identifier))
+    body: (block
+      (local_constant_statement
+        pattern: (pattern
+          (identifier))
+        type: (builtin_type)
+        value: (typed_expression
+          type: (builtin_type)
+          value: (integer_literal)))
+      (const_assert_statement
+        condition: (binary_expression
+          left: (path_expression
+            (identifier))
+          right: (typed_expression
+            type: (builtin_type)
+            value: (integer_literal))))
+      result: (path_expression
+        (identifier)))))
+
+==================
+Rest patterns in destructuring
+==================
+
+fn add_ends(values: (u32, u32, u32)) -> u32 {
+  let (first, .., last) = values;
+  first + last
+}
+
+---
+
+(source_file
+  (function_definition
+    name: (identifier)
+    parameters: (parameter_list
+      (parameter
+        name: (identifier)
+        type: (tuple_type
+          (builtin_type)
+          (builtin_type)
+          (builtin_type))))
+    return_type: (builtin_type)
+    body: (block
+      (let_statement
+        pattern: (pattern
+          (tuple_pattern
+            (pattern
+              (identifier))
+            (pattern
+              (rest_pattern))
+            (pattern
+              (identifier))))
+        value: (path_expression
+          (identifier)))
+      result: (binary_expression
+        left: (path_expression
+          (identifier))
+        right: (path_expression
+          (identifier))))))

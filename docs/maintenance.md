@@ -21,8 +21,10 @@ Compatibility updates should be deliberate, reviewable events.
 7. Regenerate `src/` with the locked Tree-sitter CLI and review public node and
    field changes as an integration concern, not generated noise.
 
-Do not test an unpinned XLS `main` as the compatibility claim. A future canary
-may use `main` only as non-blocking drift detection.
+Do not use the unpinned XLS `main` canary as the compatibility claim. The
+scheduled canary resolves the current commit, records its archive hash, parses
+the same source roots, and retains a machine-readable drift report. New syntax
+is reported without moving or weakening the pinned conformance baseline.
 
 ## Toolchain pins
 
@@ -62,3 +64,7 @@ Prioritize issues in this order:
 
 When an issue is caused by semantic validation rather than syntax, direct the
 consumer to `dslx_ls` or the official XLS frontend and keep the boundary clear.
+
+Performance budget changes in `test/benchmark-budgets.json` require evidence:
+retain the old and new benchmark reports, explain parser state or artifact-size
+growth, and do not raise a ceiling merely to make CI green.

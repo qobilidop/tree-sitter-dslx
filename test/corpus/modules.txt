@@ -11,20 +11,20 @@ import xls.modules.foo as foo;
 (source_file
   (module_attribute
     (attribute_body
-      (identifier)
-      (attribute_arguments
+      name: (identifier)
+      arguments: (attribute_arguments
         (attribute_argument
           (attribute_value
             (identifier))))))
   (import_statement
-    (import_path
+    path: (import_path
       (identifier)))
   (import_statement
-    (import_path
+    path: (import_path
       (identifier)
       (identifier)
       (identifier))
-    (identifier)))
+    alias: (identifier)))
 
 ==================
 Use tree, visibility, constants, and attributes
@@ -41,35 +41,35 @@ pub type Word = u32;
 (source_file
   (module_attribute
     (attribute_body
-      (identifier)
-      (attribute_arguments
+      name: (identifier)
+      arguments: (attribute_arguments
         (attribute_argument
           (attribute_value
             (identifier))))))
   (use_statement
-    (use_tree
-      (identifier)
-      (use_tree
-        (identifier)
+    tree: (use_tree
+      path: (identifier)
+      child: (use_tree
+        path: (identifier)
         (use_tree)
         (use_tree
-          (identifier)
-          (identifier)))))
+          path: (identifier)
+          alias: (identifier)))))
   (constant_definition
-    (visibility_modifier)
-    (identifier)
-    (builtin_type)
-    (typed_expression
-      (builtin_type)
-      (integer_literal)))
+    visibility: (visibility_modifier)
+    name: (identifier)
+    type: (builtin_type)
+    value: (typed_expression
+      type: (builtin_type)
+      value: (integer_literal)))
   (type_alias
-    (attribute
+    attribute: (attribute
       (attribute_body
-        (identifier)
-        (attribute_arguments
+        name: (identifier)
+        arguments: (attribute_arguments
           (attribute_argument
             (attribute_value
               (string_literal))))))
-    (visibility_modifier)
-    (identifier)
-    (builtin_type)))
+    visibility: (visibility_modifier)
+    name: (identifier)
+    type: (builtin_type)))

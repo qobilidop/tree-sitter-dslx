@@ -15,54 +15,54 @@ fn lexical<N': u32>(value': uN[N']) -> uN[N'] {
 (source_file
   (line_comment)
   (function_definition
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type)))
-    (parameter_list
+        name: (identifier)
+        type: (builtin_type)))
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier))))))
-    (array_type
-      (builtin_type)
-      (array_dimension
-        (path_expression
+    return_type: (array_type
+      element: (builtin_type)
+      dimension: (array_dimension
+        size: (path_expression
           (identifier))))
-    (block
-      (labeled_expression
-        (identifier)
-        (for_expression
-          (pattern
+    body: (block
+      result: (labeled_expression
+        label: (identifier)
+        value: (for_expression
+          pattern: (pattern
             (tuple_pattern
               (pattern
                 (identifier))
               (pattern
                 (identifier))))
-          (binary_expression
-            (typed_expression
-              (builtin_type)
-              (integer_literal))
-            (path_expression
+          iterable: (binary_expression
+            left: (typed_expression
+              type: (builtin_type)
+              value: (integer_literal))
+            right: (path_expression
               (identifier)))
-          (block
+          body: (block
             (line_comment)
-            (binary_expression
-              (path_expression
+            result: (binary_expression
+              left: (path_expression
                 (identifier))
-              (path_expression
+              right: (path_expression
                 (identifier))))
-          (typed_expression
-            (array_type
-              (builtin_type)
-              (array_dimension
-                (path_expression
+          initial_value: (typed_expression
+            type: (array_type
+              element: (builtin_type)
+              dimension: (array_dimension
+                size: (path_expression
                   (identifier))))
-            (integer_literal)))))))
+            value: (integer_literal)))))))
 
 ==================
 Escaped characters and strings
@@ -79,22 +79,22 @@ fn escapes() {
 
 (source_file
   (function_definition
-    (identifier)
-    (parameter_list)
-    (block
+    name: (identifier)
+    parameters: (parameter_list)
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (character_literal))
+        value: (character_literal))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (character_literal))
+        value: (character_literal))
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (string_literal))
-      (tuple_expression
+        value: (string_literal))
+      result: (tuple_expression
         (path_expression
           (identifier))
         (path_expression

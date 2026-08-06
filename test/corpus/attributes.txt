@@ -17,81 +17,81 @@ fn channel_example() { let channels = chan<u32>("data"); () }
 (source_file
   (module_attribute
     (attribute_body
-      (identifier)
-      (attribute_arguments
+      name: (identifier)
+      arguments: (attribute_arguments
         (attribute_argument
           (attribute_value
             (identifier))))))
   (function_definition
-    (attribute
+    attribute: (attribute
       (attribute_body
-        (identifier)
-        (attribute_arguments
+        name: (identifier)
+        arguments: (attribute_arguments
           (attribute_argument
-            (identifier)
-            (attribute_value
+            name: (identifier)
+            value: (attribute_value
               (integer_literal))))))
-    (identifier)
-    (parameter_list
+    name: (identifier)
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type))
+        name: (identifier)
+        type: (builtin_type))
       (parameter
-        (identifier)
-        (builtin_type)))
-    (builtin_type)
-    (block
-      (binary_expression
-        (binary_expression
-          (path_expression
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      result: (binary_expression
+        left: (binary_expression
+          left: (path_expression
             (identifier))
-          (path_expression
+          right: (path_expression
             (identifier)))
-        (binary_expression
-          (path_expression
+        right: (binary_expression
+          left: (path_expression
             (identifier))
-          (path_expression
+          right: (path_expression
             (identifier))))))
   (function_definition
-    (attribute
+    attribute: (attribute
       (attribute_body
-        (identifier)))
-    (identifier)
-    (parameter_list)
-    (block
+        name: (identifier)))
+    name: (identifier)
+    parameters: (parameter_list)
+    body: (block
       (expression_statement
         (macro_invocation
-          (macro_identifier)
-          (argument_list
+          macro: (macro_identifier)
+          arguments: (argument_list
             (boolean_literal)
             (string_literal))))))
   (function_definition
-    (attribute
+    attribute: (attribute
       (attribute_body
-        (identifier)
-        (attribute_arguments
+        name: (identifier)
+        arguments: (attribute_arguments
           (attribute_argument
-            (identifier)
-            (attribute_value
+            name: (identifier)
+            value: (attribute_value
               (identifier)))
           (attribute_argument
-            (identifier)
-            (attribute_value
+            name: (identifier)
+            value: (attribute_value
               (integer_literal)))
           (attribute_argument
-            (identifier)
-            (attribute_value
+            name: (identifier)
+            value: (attribute_value
               (boolean_literal))))))
-    (identifier)
-    (parameter_list)
-    (block
+    name: (identifier)
+    parameters: (parameter_list)
+    body: (block
       (let_statement
-        (pattern
+        pattern: (pattern
           (identifier))
-        (channel_expression
-          (builtin_type)
-          (string_literal)))
-      (tuple_expression))))
+        value: (channel_expression
+          payload: (builtin_type)
+          name: (string_literal)))
+      result: (tuple_expression))))
 
 ==================
 Multiline extern Verilog attribute
@@ -108,43 +108,43 @@ fn external_adder<W: u32>(x: uN[W], y: uN[W]) -> uN[W] { x + y }
 
 (source_file
   (function_definition
-    (attribute
+    attribute: (attribute
       (attribute_body
-        (identifier)
-        (attribute_arguments
+        name: (identifier)
+        arguments: (attribute_arguments
           (attribute_argument
             (attribute_value
               (string_literal))))))
-    (identifier)
-    (parametric_bindings
+    name: (identifier)
+    parametrics: (parametric_bindings
       (parametric_binding
-        (identifier)
-        (builtin_type)))
-    (parameter_list
+        name: (identifier)
+        type: (builtin_type)))
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier)))))
       (parameter
-        (identifier)
-        (array_type
-          (builtin_type)
-          (array_dimension
-            (path_expression
+        name: (identifier)
+        type: (array_type
+          element: (builtin_type)
+          dimension: (array_dimension
+            size: (path_expression
               (identifier))))))
-    (array_type
-      (builtin_type)
-      (array_dimension
-        (path_expression
+    return_type: (array_type
+      element: (builtin_type)
+      dimension: (array_dimension
+        size: (path_expression
           (identifier))))
-    (block
-      (binary_expression
-        (path_expression
+    body: (block
+      result: (binary_expression
+        left: (path_expression
           (identifier))
-        (path_expression
+        right: (path_expression
           (identifier))))))
 
 ==================
@@ -158,19 +158,19 @@ fn fuzz_target(x: u32) -> u32 { x }
 
 (source_file
   (function_definition
-    (attribute
+    attribute: (attribute
       (attribute_body
-        (identifier)
-        (attribute_arguments
+        name: (identifier)
+        arguments: (attribute_arguments
           (attribute_argument
             (attribute_value
               (backtick_string_literal))))))
-    (identifier)
-    (parameter_list
+    name: (identifier)
+    parameters: (parameter_list
       (parameter
-        (identifier)
-        (builtin_type)))
-    (builtin_type)
-    (block
-      (path_expression
+        name: (identifier)
+        type: (builtin_type)))
+    return_type: (builtin_type)
+    body: (block
+      result: (path_expression
         (identifier)))))

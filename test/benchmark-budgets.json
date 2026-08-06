@@ -1,0 +1,22 @@
+{
+  "parser_artifacts": {
+    "state_count_max": 2250,
+    "large_state_count_max": 140,
+    "parser_c_bytes_max": 2250000,
+    "wasm_bytes_max": 350000
+  },
+  "fixtures": {
+    "small": {
+      "initial_ms_max": 10,
+      "incremental_ms_max": 5
+    },
+    "medium": {
+      "initial_ms_max": 40,
+      "incremental_ms_max": 15
+    },
+    "large": {
+      "initial_ms_max": 200,
+      "incremental_ms_max": 20
+    }
+  }
+}

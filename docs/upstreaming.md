@@ -12,7 +12,8 @@ compiler process:
 
 - Incremental, error-tolerant concrete syntax trees on every edit.
 - C and WebAssembly integration foundations.
-- Query-tested DSLX highlighting.
+- Query-tested DSLX highlighting, code-navigation tags, and local-variable
+  tracking.
 - A static browser demonstration with no `dslx_ls` service cost.
 - A reproducible compatibility claim tied to one XLS revision.
 
@@ -58,8 +59,10 @@ same generated C parser rather than create a second implementation.
 - Who reviews DSLX baseline updates and public tree-shape changes?
 - Should support track selected XLS releases, periodic commits, or another
   compatibility cadence?
-- Which first downstream consumer justifies the next binding or query?
+- Which first downstream consumer justifies the next binding or specialized
+  query?
 - At what point should packages be published, and under whose release process?
 
 The proposal does not assume acceptance or ask for GitHub/Linguist onboarding,
-`tags.scm`, package publication, or changes to `dslx-vscode` as part of the MVP.
+package publication, or changes to `dslx-vscode`. The standalone tag query does
+not imply that onboarding has occurred.
